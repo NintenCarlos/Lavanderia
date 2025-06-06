@@ -28,7 +28,7 @@ export function CreateClient() {
 
    async function createNewClient() {
       try {
-         const res = await fetch("http://127.0.0.1:5000/clients/create", {
+         const res = await fetch("https://f2rrdchq-5000.usw3.devtunnels.ms/clients/create", {
             method: "POST",
             headers: {
                "Content-Type": "application/json",

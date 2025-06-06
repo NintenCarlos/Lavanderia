@@ -9,6 +9,8 @@ import {
    TextInput,
    View,
    Alert,
+   ScrollView,
+   Platform,
 } from "react-native";
 
 export default function Login() {
@@ -32,13 +34,16 @@ export default function Login() {
 
    async function loginUser() {
       try {
-         const res = await fetch("http://127.0.0.1:5000/users/register", {
-            method: "POST",
-            headers: {
-               "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ ...data, rol }),
-         });
+         const res = await fetch(
+            "https://f2rrdchq-5000.usw3.devtunnels.ms/users/register",
+            {
+               method: "POST",
+               headers: {
+                  "Content-Type": "application/json",
+               },
+               body: JSON.stringify({ ...data, rol }),
+            }
+         );
 
          if (res.ok) {
             Alert.alert("Se ha creado el usuario");
@@ -76,7 +81,7 @@ export default function Login() {
 
             <Text style={styles.label}>Rol del empleado</Text>
             <Picker
-               style={styles.form}
+               style={Platform.OS == "web" ? styles.form : {marginBottom: 20}}
                selectedValue={rol}
                onValueChange={(value) => {
                   setRol(value);

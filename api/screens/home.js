@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView, Pressable, ScrollView } from "react-native";
+import {
+   View,
+   Text,
+   StyleSheet,
+   SafeAreaView,
+   Pressable,
+   ScrollView,
+   Platform,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { TextInput } from "react-native-gesture-handler";
+import axios from "axios";
 
 export default function Home() {
    const [clients, setClients] = useState([]);
@@ -10,12 +19,11 @@ export default function Home() {
    const [search, setSearch] = useState("");
    const [filteredClients, setFilteredClients] = useState(clients);
 
-   const navigation = useNavigation()
+   const navigation = useNavigation();
 
    useEffect(() => {
-      fetch(`http://127.0.0.1:5000/clients/search/name?name=${search}`)
-         .then((res) => res.json())
-         .then((data) => setClients(data))
+      axios.get(`https://f2rrdchq-5000.usw3.devtunnels.ms/clients/search/name?name=${search}`)
+         .then((res) => setClients(res.data))
          .catch((err) => console.error("Error al conectar:", err));
    }, []);
 
@@ -24,73 +32,88 @@ export default function Home() {
    }, [clients]);
 
    const goToCreate = () => {
-    navigation.navigate('Create-Client')
-   }
+      navigation.navigate("Create-Client");
+   };
+
+   const  deleteClient = async (id) => {
+      try {
+         await axios.delete(`https://f2rrdchq-5000.usw3.devtunnels.ms/clients/delete/${id}`)
+
+         const updatedClients = clients.filter((client) => client.id !== id)
+         setClients(updatedClients)
+         
+      } catch (error) {
+         console.error("Hay un error",error)
+      }
+
+   };
 
    return (
       <SafeAreaView style={styles.container}>
-         <View style={styles.navbar}>
-            <Pressable onPress={goToCreate}>
-               <Text style={styles.nabvarText}>Crear Cliente</Text>
-            </Pressable>
-         </View>
-         <View style={styles.dashboard}>
-            {/* Barra de Navegación (Demás Funciones por agregar) */}
-
-            {/* Contenido de Abajo */}
-            <View style={styles.searchContainer}>
-               <TextInput
-                  style={styles.searchInput}
-                  placeholder="Busca por nombre"
-                  value={search}
-                  onChangeText={(text) => {
-                     setSearch(text);
-
-                     const filtered = clients.filter((client) => {
-                        return client.name
-                           .toLowerCase()
-                           .includes(text.toLowerCase());
-                     });
-
-                     setFilteredClients(filtered);
-                  }}
-               />
-               <FontAwesome5 name="search" size={30} color="#375261" />
+         <ScrollView>
+            <View style={styles.navbar}>
+               <Pressable onPress={goToCreate}>
+                  <Text style={styles.nabvarText}>Crear Cliente</Text>
+               </Pressable>
             </View>
+            <View style={styles.dashboard}>
+               {/* Barra de Navegación (Demás Funciones por agregar) */}
 
-            <View style={styles.cardsWrapper}>
-               {filteredClients.map((c, index) => {
-                  return (
-                     <View key={index} style={styles.notes}>
-                        <Text style={styles.textNote}>Nombre: {c.name}</Text>
-                        <Text style={styles.textNote}>
-                           Tel: {c.phone_number}
-                        </Text>
-                        <Text style={styles.textNote}>
-                           Dirección: {c.address}
-                        </Text>
+               {/* Contenido de Abajo */}
+               <View style={styles.searchContainer}>
+                  <TextInput
+                     style={styles.searchInput}
+                     placeholder="Busca por nombre"
+                     value={search}
+                     onChangeText={(text) => {
+                        setSearch(text);
 
-                        <View style={styles.iconContainer}>
-                           <Pressable>
-                              <FontAwesome5
-                                 name="edit"
-                                 size={24}
-                                 color="#8A804C"
-                              />
-                           </Pressable>
-                           <Pressable>
-                              <FontAwesome5
-                                 name="times"
-                                 size={24}
-                                 color="#8A804C"
-                              />
-                           </Pressable>
+                        const filtered = clients.filter((client) => {
+                           return client.name
+                              .toLowerCase()
+                              .includes(text.toLowerCase());
+                        });
+
+                        setFilteredClients(filtered);
+                     }}
+                  />
+                  <FontAwesome5 name="search" size={30} color="#375261" />
+               </View>
+
+               <View style={styles.cardsWrapper}>
+                  {filteredClients.map((c, index) => {
+                     return (
+                        <View key={index} style={styles.notes}>
+                           <Text style={styles.textNote}>Nombre: {c.name}</Text>
+                           <Text style={styles.textNote}>
+                              Tel: {c.phone_number}
+                           </Text>
+                           <Text style={styles.textNote}>
+                              Dirección: {c.address}
+                           </Text>
+
+                           <View style={styles.iconContainer}>
+                              <Pressable>
+                                 <FontAwesome5
+                                    name="edit"
+                                    size={24}
+                                    color="#8A804C"
+                                 />
+                              </Pressable>
+                              <Pressable onPress={(()=> {deleteClient(c.id)})} >
+                                 <FontAwesome5
+                                    name="times"
+                                    size={24}
+                                    color="#8A804C"
+                                 />
+                              </Pressable>
+                           </View>
                         </View>
-                     </View>
-                  );
-               })}
+                     );
+                  })}
+               </View>
             </View>
-         </View>
+         </ScrollView>
       </SafeAreaView>
    );
 }
@@ -123,14 +146,14 @@ const styles = StyleSheet.create({
    cardsWrapper: {
       flexDirection: "row",
       flexWrap: "wrap",
-      justifyContent: "flex-start",
+      justifyContent: "center",
       padding: 20,
    },
 
    notes: {
       backgroundColor: "#FFEE8C",
-      width: 200,
-      height: 200,
+      width: 150,
+      height: 150,
       margin: 10,
       padding: 10,
       borderRadius: 10,
@@ -147,7 +170,7 @@ const styles = StyleSheet.create({
 
    iconContainer: {
       flexDirection: "row",
-      paddingTop: 40,
+      paddingTop: 10,
       gap: 10,
    },
 
@@ -161,7 +184,7 @@ const styles = StyleSheet.create({
 
    searchInput: {
       backgroundColor: "white",
-      height: 35,
+      height: 40,
       borderColor: "#375261",
       borderWidth: 1,
       borderRadius: 10,

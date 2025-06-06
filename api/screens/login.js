@@ -7,13 +7,16 @@ import {
    Text,
    TextInput,
    View,
-   Alert
+   Alert,
+   KeyboardAvoidingView
 } from "react-native";
 
 export default function Login() {
    const navigation = useNavigation();
 
-   const [data, setData] = useState({});
+   const [data, setData] = useState({
+      email: '', password: ''
+   });
 
    const settingData = (field, value) => {
       setData((prev) => ({
@@ -24,7 +27,7 @@ export default function Login() {
 
    async function loginUser() {
       try {
-         const res = await fetch("http://127.0.0.1:5000/users/login", {
+         const res = await fetch("https://f2rrdchq-5000.usw3.devtunnels.ms/users/login", {
             method: "POST",
             headers: {
                "Content-Type": "application/json",
@@ -33,7 +36,6 @@ export default function Login() {
          });
 
          if (res.ok) {
-            Alert.alert("Se ha registrado al usuario");
             navigation.navigate("Home");
          } else {
             Alert.alert("Hubo un error");
@@ -45,13 +47,14 @@ export default function Login() {
 
    return (
       <SafeAreaView style={styles.container}>
-         <View style={styles.loginContainer}>
+         <KeyboardAvoidingView>
+            <View style={styles.loginContainer}>
             <Text style={styles.title}>Iniciar Sesión</Text>
             <Text style={styles.label}>Correo Electrónico</Text>
             <TextInput style={styles.form}  onChangeText={(text) => settingData("email", text)} />
 
             <Text style={styles.label}>Contraseña</Text>
-            <TextInput style={styles.form}  onChangeText={(text) => settingData("password", text)} />
+            <TextInput style={styles.form}  onChangeText={(text) => settingData("password", text)} secureTextEntry={true} />
 
             <Pressable style={styles.loginButton} onPress={loginUser}>
                <Text style={styles.loginButton.loginButtonText}>
@@ -65,6 +68,7 @@ export default function Login() {
                </Text>
             </Pressable>
          </View>
+         </KeyboardAvoidingView>
       </SafeAreaView>
    );
 }
