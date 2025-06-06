@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
 
    createClientContainer: {
       backgroundColor: "white",
-      padding: 150,
+      padding: 50,
       borderRadius: 20,
       shadowOffset: { height: 2, width: 3 },
       shadowOpacity: 0.3,

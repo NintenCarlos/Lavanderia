@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import {
    Pressable,
@@ -7,13 +8,20 @@ import {
    Text,
    TextInput,
    View,
-   Alert
+   Alert,
 } from "react-native";
 
 export default function Login() {
    const navigation = useNavigation();
 
-   const [data, setData] = useState({});
+   const [data, setData] = useState({
+      name: "",
+      email: "",
+      password: "",
+      rol: "empleado",
+   });
+
+   const [rol, setRol] = useState("");
 
    const settingData = (field, value) => {
       setData((prev) => ({
@@ -24,17 +32,17 @@ export default function Login() {
 
    async function loginUser() {
       try {
-         const res = await fetch("http://127.0.0.1:5000/users/login", {
+         const res = await fetch("http://127.0.0.1:5000/users/register", {
             method: "POST",
             headers: {
                "Content-Type": "application/json",
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify({ ...data, rol }),
          });
 
          if (res.ok) {
-            Alert.alert("Se ha registrado al usuario");
-            navigation.navigate("Home");
+            Alert.alert("Se ha creado el usuario");
+            navigation.navigate("Login");
          } else {
             Alert.alert("Hubo un error");
          }
@@ -46,22 +54,52 @@ export default function Login() {
    return (
       <SafeAreaView style={styles.container}>
          <View style={styles.loginContainer}>
-            <Text style={styles.title}>Iniciar Sesión</Text>
+            <Text style={styles.title}>Registrarse</Text>
+
+            <Text style={styles.label}>Nombre</Text>
+            <TextInput
+               style={styles.form}
+               onChangeText={(text) => settingData("name", text)}
+            />
+
             <Text style={styles.label}>Correo Electrónico</Text>
-            <TextInput style={styles.form}  onChangeText={(text) => settingData("email", text)} />
+            <TextInput
+               style={styles.form}
+               onChangeText={(text) => settingData("email", text)}
+            />
 
             <Text style={styles.label}>Contraseña</Text>
-            <TextInput style={styles.form}  onChangeText={(text) => settingData("password", text)} />
+            <TextInput
+               style={styles.form}
+               onChangeText={(text) => settingData("password", text)}
+            />
+
+            <Text style={styles.label}>Rol del empleado</Text>
+            <Picker
+               style={styles.form}
+               selectedValue={rol}
+               onValueChange={(value) => {
+                  setRol(value);
+                  settingData("rol", value);
+               }}
+            >
+               <Picker.Item label="Empleado" value="empleado" />
+               <Picker.Item label="Administrador" value="administrador" />
+            </Picker>
 
             <Pressable style={styles.loginButton} onPress={loginUser}>
                <Text style={styles.loginButton.loginButtonText}>
-                  Iniciar Sesión
+                  Registrate
                </Text>
             </Pressable>
 
-            <Pressable onPress={(()=> {navigation.navigate("Register")})}>
+            <Pressable
+               onPress={() => {
+                  navigation.navigate("Login");
+               }}
+            >
                <Text style={styles.registerLink}>
-                  ¿No tienes una cuenta?. ¡Registrate!
+                  ¿Ya tienes una cuenta? !Inicia sesión!
                </Text>
             </Pressable>
          </View>
