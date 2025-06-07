@@ -12,6 +12,7 @@ import {
    ScrollView,
    Platform,
 } from "react-native";
+import axios from "axios";
 
 export default function Login() {
    const navigation = useNavigation();
@@ -34,22 +35,15 @@ export default function Login() {
 
    async function loginUser() {
       try {
-         const res = await fetch(
-            "https://f2rrdchq-5000.usw3.devtunnels.ms/users/register",
-            {
-               method: "POST",
-               headers: {
-                  "Content-Type": "application/json",
-               },
-               body: JSON.stringify({ ...data, rol }),
-            }
-         );
 
-         if (res.ok) {
-            Alert.alert("Se ha creado el usuario");
+         const res = await axios.post("https://f2rrdchq-5000.usw3.devtunnels.ms/users/register", data)
+
+         if (res.status == 200) {
+            {Platform.OS == 'web'? alert('Se ha registrado al usuario'): Alert.alert("Se ha registrado al usuario")}
             navigation.navigate("Login");
          } else {
-            Alert.alert("Hubo un error");
+            {Platform.OS == 'web'? alert('Hubo un error al hace el registro.'): Alert.alert("Hubo un error al hace el registro.")}
+
          }
       } catch (error) {
          console.error(error);
@@ -77,6 +71,7 @@ export default function Login() {
             <TextInput
                style={styles.form}
                onChangeText={(text) => settingData("password", text)}
+               secureTextEntry
             />
 
             <Text style={styles.label}>Rol del empleado</Text>

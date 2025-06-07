@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 import { useState } from "react";
 import {
    Pressable,
@@ -8,7 +9,8 @@ import {
    TextInput,
    View,
    Alert,
-   KeyboardAvoidingView
+   KeyboardAvoidingView,
+   Platform
 } from "react-native";
 
 export default function Login() {
@@ -27,18 +29,12 @@ export default function Login() {
 
    async function loginUser() {
       try {
-         const res = await fetch("https://f2rrdchq-5000.usw3.devtunnels.ms/users/login", {
-            method: "POST",
-            headers: {
-               "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-         });
+         const res = await axios.post("https://f2rrdchq-5000.usw3.devtunnels.ms/users/login", data);
 
-         if (res.ok) {
+         if (res.status == 200) {
             navigation.navigate("Home");
          } else {
-            Alert.alert("Hubo un error");
+            {Platform.OS == 'web'? alert("Hubo un error al iniciar sesión."): Alert.alert("Hubo un error al iniciar sesión.")}
          }
       } catch (error) {
          console.error(error);

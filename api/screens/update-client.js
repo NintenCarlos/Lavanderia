@@ -1,6 +1,47 @@
-import { Pressable, SafeAreaView, StyleSheet, Text, View, TextInput } from "react-native";
+import {
+   Pressable,
+   SafeAreaView,
+   StyleSheet,
+   Text,
+   View,
+   TextInput,
+   Alert,
+   Platform,
+} from "react-native";
+import { useRoute, useNavigation } from "@react-navigation/native";
+import { useState } from "react";
+import axios from "axios";
 
 export default function UpdateClient() {
+   const route = useRoute();
+   const navigation = useNavigation();
+   const { client } = route.params;
+
+   const [data, setData] = useState({
+      name: client.name,
+      phone_number: client.phone_number,
+      address: client.address,
+   });
+
+   const updateClient = async () => {
+      try {
+         await axios.put(
+            `https://f2rrdchq-5000.usw3.devtunnels.ms/clients/update/${client.id}`,
+            data
+         );
+
+         Platform.OS == "web"
+            ? alert("Cliente actualizado")
+            : Alert.alert("Cliente Actualizado");
+         navigation.navigate("Home");
+      } catch (error) {
+         Platform.OS == "web"
+            ? alert("Hubo un error al actualizar al cliente.")
+            : Alert.alert("Hubo un error al actualizar al cliente.");
+         console.error(error);
+      }
+   };
+
    return (
       <SafeAreaView style={styles.container}>
          <View style={styles.updateClientContainer}>
@@ -8,15 +49,27 @@ export default function UpdateClient() {
             <Text style={styles.title}>Modificar Cliente</Text>
 
             <Text style={styles.label}>Nombre(s)</Text>
-            <TextInput style={styles.inputs} />
+            <TextInput
+               style={styles.inputs}
+               value={data.name}
+               onChangeText={(text) => setData({ ...data, name: text })}
+            />
 
             <Text style={styles.label}>Número Telefónico</Text>
-            <TextInput style={styles.inputs} />
+            <TextInput
+               style={styles.inputs}
+               value={data.phone_number}
+               onChangeText={(text) => setData({ ...data, phone_number: text })}
+            />
 
             <Text style={styles.label}>Dirección</Text>
-            <TextInput style={styles.inputs} />
+            <TextInput
+               style={styles.inputs}
+               value={data.address}
+               onChangeText={(text) => setData({ ...data, address: text })}
+            />
 
-            <Pressable style={styles.button}>
+            <Pressable style={styles.button} onPress={updateClient}>
                <Text style={styles.buttonText}>Actualizar Datos</Text>
             </Pressable>
          </View>

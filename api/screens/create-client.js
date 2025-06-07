@@ -8,7 +8,9 @@ import {
    Pressable,
    StyleSheet,
    Alert,
+   Platform,
 } from "react-native";
+import axios from "axios";
 
 export function CreateClient() {
    const navigation = useNavigation();
@@ -28,19 +30,13 @@ export function CreateClient() {
 
    async function createNewClient() {
       try {
-         const res = await fetch("https://f2rrdchq-5000.usw3.devtunnels.ms/clients/create", {
-            method: "POST",
-            headers: {
-               "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-         });
+         const res = await axios.post("https://f2rrdchq-5000.usw3.devtunnels.ms/clients/create", data)
 
-         if (res.ok) {
-            Alert.alert("Se ha creado el usuario");
+         if (res.status == 200) {
+            {Platform.OS == "web"? alert("Se ha creado el usuario."): Alert.alert("Se ha creado el usuario.") }
             navigation.navigate("Home");
          } else {
-            Alert.alert("Hubo un error");
+            {Platform.OS == "web"? alert("Ha ocurrido un error al momento de crear al cliente."): Alert.alert("Ha ocurrido un error al momento de crear al cliente.") }
          }
       } catch (error) {
          console.error(error);
@@ -91,7 +87,7 @@ const styles = StyleSheet.create({
    },
 
    createClientContainer: {
-      backgroundColor: "white",
+      backgroundColor: "#fff",
       padding: 50,
       borderRadius: 20,
       shadowOffset: { height: 2, width: 3 },

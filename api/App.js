@@ -15,8 +15,8 @@ export default function MyStack() {
       <Stack.Navigator>
       <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
       <Stack.Screen name="Home" component={Home} options={{headerShown: false}} />
-      <Stack.Screen name="Update-Client" component={UpdateClient} options={{headerShown: false}} />
       <Stack.Screen name='Create-Client' component={CreateClient} options={{headerShown: false}}/>
+      <Stack.Screen name="Update-Client" component={UpdateClient} options={{headerShown: false}} />
       <Stack.Screen name="Register" component={Register} options={{headerShown: false}} />
     </Stack.Navigator>
     </NavigationContainer>

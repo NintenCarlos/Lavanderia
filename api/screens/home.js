@@ -7,6 +7,7 @@ import {
    Pressable,
    ScrollView,
    Platform,
+   Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
@@ -16,13 +17,17 @@ import axios from "axios";
 export default function Home() {
    const [clients, setClients] = useState([]);
 
-   const [search, setSearch] = useState("");
+   const [searchName, setSearchName] = useState("");
+   const [searchPhoneNumber, setSearchPhoneNumber] = useState("");
    const [filteredClients, setFilteredClients] = useState(clients);
 
    const navigation = useNavigation();
 
    useEffect(() => {
-      axios.get(`https://f2rrdchq-5000.usw3.devtunnels.ms/clients/search/name?name=${search}`)
+      axios
+         .get(
+            `https://f2rrdchq-5000.usw3.devtunnels.ms/clients/search/name?name=`
+         )
          .then((res) => setClients(res.data))
          .catch((err) => console.error("Error al conectar:", err));
    }, []);
@@ -31,31 +36,73 @@ export default function Home() {
       setFilteredClients(clients);
    }, [clients]);
 
-   const goToCreate = () => {
-      navigation.navigate("Create-Client");
+   const searchClientsByName = async (name) => {
+      await axios
+         .get(
+            `https://f2rrdchq-5000.usw3.devtunnels.ms/clients/search/name?name=${name}`
+         )
+         .then((res) => setFilteredClients(res.data))
+         .catch((err) => console.error("Error al conectar:", err));
+
+      return filteredClients;
    };
 
-   const  deleteClient = async (id) => {
-      try {
-         await axios.delete(`https://f2rrdchq-5000.usw3.devtunnels.ms/clients/delete/${id}`)
-
-         const updatedClients = clients.filter((client) => client.id !== id)
-         setClients(updatedClients)
-         
-      } catch (error) {
-         console.error("Hay un error",error)
+   const searchClientsByPhoneNumber = async (phone) => {
+      if (!phone) {
+         return searchClientsByName("");
       }
 
+      try {
+         const res = await axios.get(
+            `https://f2rrdchq-5000.usw3.devtunnels.ms/clients/search/phone?phone=${phone}`
+         );
+
+         setFilteredClients([res.data]);
+         return filteredClients;
+      } catch (error) {
+         return searchClientsByName("");
+      }
+   };
+
+   const deleteClient = async (id) => {
+      try {
+         await axios.delete(
+            `https://f2rrdchq-5000.usw3.devtunnels.ms/clients/delete/${id}`
+         );
+
+         const updatedClients = clients.filter((client) => client.id !== id);
+         setClients(updatedClients);
+
+         {
+            Platform.OS == "web"
+               ? alert("El cliente se ha elimiando.")
+               : Alert.alert("El cliente se ha elimiando.");
+         }
+      } catch (error) {
+         {
+            Platform.OS == "web"
+               ? alert("Ha ocurrido un error al momento de eliminar al cliente.")
+               : Alert.alert(
+                    "Ha ocurrido un error al momento de eliminar al cliente."
+                 );
+         }
+
+         console.error("Hay un error", error);
+      }
    };
 
    return (
       <SafeAreaView style={styles.container}>
-         <ScrollView>
             <View style={styles.navbar}>
-               <Pressable onPress={goToCreate}>
+               <Pressable
+                  onPress={() => {
+                     navigation.navigate("Create-Client");
+                  }}
+               >
                   <Text style={styles.nabvarText}>Crear Cliente</Text>
                </Pressable>
             </View>
+         <ScrollView>
             <View style={styles.dashboard}>
                {/* Barra de Navegación (Demás Funciones por agregar) */}
 
@@ -64,20 +111,27 @@ export default function Home() {
                   <TextInput
                      style={styles.searchInput}
                      placeholder="Busca por nombre"
-                     value={search}
+                     value={searchName}
                      onChangeText={(text) => {
-                        setSearch(text);
-
-                        const filtered = clients.filter((client) => {
-                           return client.name
-                              .toLowerCase()
-                              .includes(text.toLowerCase());
-                        });
-
-                        setFilteredClients(filtered);
+                        setSearchName(text);
+                        searchClientsByName(text);
                      }}
                   />
+
                   <FontAwesome5 name="search" size={30} color="#375261" />
+               </View>
+
+               <View style={styles.searchContainer}>
+                  <TextInput
+                     style={styles.searchInput}
+                     placeholder="Buscar por número telefónico"
+                     value={searchPhoneNumber}
+                     onChangeText={(text) => {
+                        setSearchPhoneNumber(text);
+                        searchClientsByPhoneNumber(text);
+                     }}
+                  />
+                  <FontAwesome5 name="phone-alt" size={30} color="#375261" />
                </View>
 
                <View style={styles.cardsWrapper}>
@@ -93,14 +147,24 @@ export default function Home() {
                            </Text>
 
                            <View style={styles.iconContainer}>
-                              <Pressable>
+                              <Pressable
+                                 onPress={() =>
+                                    navigation.navigate("Update-Client", {
+                                       client: c,
+                                    })
+                                 }
+                              >
                                  <FontAwesome5
                                     name="edit"
                                     size={24}
                                     color="#8A804C"
                                  />
                               </Pressable>
-                              <Pressable onPress={(()=> {deleteClient(c.id)})} >
+                              <Pressable
+                                 onPress={() => {
+                                    deleteClient(c.id);
+                                 }}
+                              >
                                  <FontAwesome5
                                     name="times"
                                     size={24}
@@ -121,6 +185,7 @@ export default function Home() {
 const styles = StyleSheet.create({
    container: {
       flex: 1,
+      backgroundColor: "#eaffff",
    },
 
    navbar: {
@@ -133,7 +198,7 @@ const styles = StyleSheet.create({
       color: "white",
       textAlign: "right",
       paddingHorizontal: 30,
-      fontSize: 24,
+      fontSize: 22,
       fontWeight: 500,
    },
 
