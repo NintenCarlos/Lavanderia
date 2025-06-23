@@ -10,7 +10,7 @@ class Order(db.Model):
     
     created_at = db.Column(db.DateTime, default=datetime.now()) 
     estimated_delivery_date = db.Column(db.DateTime, nullable=False) 
-    real_delivery_date = db.Column(db.DateTime, nullable=False) 
+    real_delivery_date = db.Column(db.DateTime) 
     
     state = db.Column(db.String(20), default="recibido") #Recibido, En proceso, Entregado. 
     total = db.Column(db.Integer, nullable=False)
