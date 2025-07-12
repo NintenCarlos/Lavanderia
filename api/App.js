@@ -6,6 +6,8 @@ import Home from './screens/home';
 import { CreateClient } from './screens/create-client';
 import Register from './screens/register';
 import UpdateClient from './screens/update-client';
+import Order from './screens/order';
+import OrderResume from './screens/order-resume';
 
 const Stack = createStackNavigator();
 
@@ -13,6 +15,8 @@ export default function MyStack() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+      <Stack.Screen name="Order-Resume" component={OrderResume} options={{headerShown: false}} />
+      <Stack.Screen name="Order" component={Order} options={{headerShown: false}} />
       <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
       <Stack.Screen name="Home" component={Home} options={{headerShown: false}} />
       <Stack.Screen name='Create-Client' component={CreateClient} options={{headerShown: false}}/>

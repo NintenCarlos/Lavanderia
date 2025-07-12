@@ -17,3 +17,25 @@ class Order(db.Model):
     pagado = db.Column(db.Boolean, default=False)
     
     #Relaciones inversas (Pendientes)
+    garments = db.relationship("Garment", backref="order", lazy=True)
+    
+    # Relación de pagos
+    
+    
+    def to_dict(self, garments:bool=False): 
+   
+        order = {
+            'id': self.id,
+            'client_id': self.client_id,
+            'user_id': self.user_id,
+            'created_at': self.created_at,
+            'estimated_delivery_date': self.estimated_delivery_date,
+            'real_delivery_date': self.real_delivery_date,
+            'state': self.state,
+            'total': self.total,
+            'pagado': self.pagado
+        }
+        
+        if garments: 
+            order['garments'] = self.garments
+        return order 

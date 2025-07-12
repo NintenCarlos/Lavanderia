@@ -8,3 +8,19 @@ class Service(db.Model):
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(200))
     price = db.Column(db.Float, nullable=False)
+    
+    garment_link = db.relationship("OrderDetail", backref="service", lazy=True)
+    
+    def to_dict (self, garment_link:bool=False):
+       return self.__dict__
+       """  service = {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'price': self.price
+        }
+        
+        if garment_link: 
+            service['garment_link'] = self.garment_link
+        return service """
+        
