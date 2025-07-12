@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
    View,
    Text,
@@ -12,27 +12,31 @@ import { Picker } from "@react-native-picker/picker";
 import { Button, Card } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import constants from "../constants";
+import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 
 const { garments, services } = constants;
 
 const CreateOrder = () => {
+   const navigation = useNavigation();
+
    const defaultGarment = {
       type: "Camisa",
       description: "",
-      observations: "",
+      observation: "",
       services: [{ ...services[0] }],
    };
+   const [totalOrder, setTotalOrder] = useState(0);
 
    const [order, setOrder] = useState({
-      client_id: 0,
-      user_id: 0,
+      client_id: 1,
+      user_id: 1,
       state: "recibido",
-      total: 0,
+      estimated_delivery_date: '2025-07-11',
+      total: totalOrder,
       pagado: false,
       garments: [{ ...defaultGarment }],
    });
-
-   const [total, setTotal] = useState(0);
 
    const calculateTotal = () => {
       let subTotal = 0;
@@ -44,8 +48,13 @@ const CreateOrder = () => {
             }
          }
       }
-      setTotal(subTotal);
+      setTotalOrder(subTotal);
    };
+
+   useEffect(() => {
+      calculateTotal();
+   }),
+      [order];
 
    const addGarment = () => {
       const data = { ...order };
@@ -109,6 +118,13 @@ const CreateOrder = () => {
       setOrder(data);
    };
 
+   const createOrderDetail = async () => {
+      try {
+         console.log(order);
+         navigation.navigate('OrderR') 
+      } catch (err) {}
+   };
+
    return (
       <View>
          <ScrollView style={styles.container}>
@@ -123,16 +139,21 @@ const CreateOrder = () => {
                      Agregar Prenda
                   </Button>
 
-                  <Text style={styles.subtitle}>Prendas:</Text>
+                  <Text style={[styles.garmentTitle, { margin: 10 }]}>
+                     Prendas:
+                  </Text>
 
                   {order.garments?.map((garment, i) => (
-                     <View key={`garment-${i}`} style={styles.garmentContainer}>
+                     <View
+                        key={`garment-${i}`}
+                        style={[styles.garmentContainer, { margin: 10 }]}
+                     >
                         {i > 0 && (
                            <TouchableOpacity
                               style={styles.deleteButton}
                               onPress={() => deleteGarment(i)}
                            >
-                              <Icon name="delete" size={24} color="red" />
+                              <Icon name="delete" size={24} color="#375261" />
                            </TouchableOpacity>
                         )}
 
@@ -181,9 +202,9 @@ const CreateOrder = () => {
                            <Text style={styles.label}>Observaciones:</Text>
                            <TextInput
                               style={styles.input}
-                              value={garment.observations}
+                              value={garment.observation}
                               onChangeText={(text) =>
-                                 onChangeGarment("observations", text, i)
+                                 onChangeGarment("observation", text, i)
                               }
                               placeholder="Observaciones"
                            />
@@ -203,7 +224,11 @@ const CreateOrder = () => {
                                        deleteServiceToGarment(i, is)
                                     }
                                  >
-                                    <Icon name="close" size={20} color="red" />
+                                    <Icon
+                                       name="close"
+                                       size={20}
+                                       color="#375261"
+                                    />
                                  </TouchableOpacity>
                               )}
 
@@ -283,21 +308,17 @@ const CreateOrder = () => {
                   ))}
 
                   <View style={styles.totalContainer}>
-                     <Text style={styles.subtotal}>
-                        Subtotal: ${(total / 1.16).toFixed(2)}
-                     </Text>
-                     <Text style={styles.subtotal}>
-                        IVA: ${(total - total / 1.16).toFixed(2)}
-                     </Text>
                      <Text style={styles.total}>
-                        Total: ${total.toFixed(2)}
+                        Total: ${totalOrder.toFixed(2)}
                      </Text>
                      <Button
                         mode="contained"
-                        onPress={calculateTotal}
-                        style={styles.calculateButton}
+                        onPress={() => {
+                           createOrderDetail();
+                        }}
+                        style={styles.resumeOrderButton}
                      >
-                        Calcular Total
+                        Ver Resumen de Orden
                      </Button>
                   </View>
                </Card.Content>
@@ -417,6 +438,15 @@ const styles = StyleSheet.create({
       color: "#2e4957",
       justifyContent: "center",
       backgroundColor: "#fff",
+   },
+
+   resumeOrderButton: {
+      backgroundColor: "#2e4957",
+      borderRadius: 20,
+      marginTop: 10,
+   },
+   label: {
+      marginBottom: 10,
    },
 });
 

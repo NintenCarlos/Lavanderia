@@ -47,10 +47,6 @@ def get_order_detail(order_id):
         "status": order.state,
         "garments": []
     }
-    
-    print(order)
-    
-    print("Buscando prendas para la orden:", order.id)
 
     garments = Garment.query.filter_by(order_id = order.id).all()
     print(order.to_dict())
@@ -69,12 +65,16 @@ def get_order_detail(order_id):
             service_data = {
                 "name": service.name,
                 "description": service.description,
+                "unitPrice": service.price,
+                "quantity": s.quantity,
+                
             }  
             
             garment_data["services"].append(service_data)
     
         order_data["garments"].append(garment_data)        
-          
+        
+    
     return order_data
 
 

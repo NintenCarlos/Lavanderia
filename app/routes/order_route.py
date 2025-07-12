@@ -16,7 +16,7 @@ def create():
         estimated_date= date,
         total_price= data["total"]
         ) 
-    
+    print("Orden", order.to_dict())
     
     for garment in data["garments"] : 
         new_garment = add_garment(
@@ -32,12 +32,11 @@ def create():
                 description= "Descripción Momentanea",
                 price= service["unitPrice"]
             )
-            
-            subtotal = service["unitPrice"] * service["quantity"]
-            
+                        
             create_order_detail(
                 garment_id=new_garment.id, 
-                service_id= new_service.id, quantity=service["quantity"])
+                service_id= new_service.id, 
+                quantity=service["quantity"])
     
     return jsonify({
         "msg": "Orden creada con éxito.",
