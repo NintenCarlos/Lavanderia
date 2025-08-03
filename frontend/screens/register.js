@@ -13,7 +13,7 @@ import {
    Platform,
 } from "react-native";
 import axios from "axios";
-
+import { Card } from "react-native-paper";
 
 export default function Login() {
    const navigation = useNavigation();
@@ -25,26 +25,19 @@ export default function Login() {
       rol: "empleado",
    });
 
-   const [rol, setRol] = useState("");
-
    const onChangeData = (key, value) => {
-      const user = {...data}; 
+      const user = { ...data };
 
       if (user) {
-         user[key] = value
+         user[key] = value;
       }
-      
-      setData(user)
-      console.log(user)
-   }
 
+      setData(user);
+   };
 
    async function loginUser() {
       try {
-         await axios.post(
-            "https://83l3lgt8-5000.usw3.devtunnels.ms/users/register",
-            data
-         );
+         await axios.post("http://127.0.0.1:5000/users/register", data);
 
          Platform.OS == "web"
             ? alert("Se ha registrado al usuario")
@@ -63,43 +56,47 @@ export default function Login() {
 
    return (
       <SafeAreaView style={styles.container}>
-         <View style={styles.loginContainer}>
+         <Card
+            style={
+               Platform.OS == "web"
+                  ? styles.ContainerWeb
+                  : styles.containerMobile
+            }
+         >
             <Text style={styles.title}>Registrarse</Text>
 
-            <Text style={styles.label}>Nombre</Text>
+            <Text style={Platform.OS == 'web' ? styles.labelWeb : styles.labelMobile}>Nombre</Text>
             <TextInput
                style={styles.form}
                onChangeText={(text) => onChangeData("name", text)}
             />
 
-            <Text style={styles.label}>Correo Electrónico</Text>
+            <Text style={Platform.OS == 'web' ? styles.labelWeb : styles.labelMobile}>Correo Electrónico</Text>
             <TextInput
                style={styles.form}
                onChangeText={(text) => onChangeData("email", text)}
             />
 
-            <Text style={styles.label}>Contraseña</Text>
+            <Text style={Platform.OS == 'web' ? styles.labelWeb : styles.labelMobile}>Contraseña</Text>
             <TextInput
                style={styles.form}
                onChangeText={(text) => onChangeData("password", text)}
                secureTextEntry
             />
 
-            <Text style={styles.label}>Rol del empleado</Text>
+            <Text style={Platform.OS == 'web' ? styles.labelWeb : styles.labelMobile}>Rol del empleado</Text>
             <Picker
                style={Platform.OS == "web" ? styles.form : { marginBottom: 20 }}
-               selectedValue={rol}
                onValueChange={(value) => {
-                  setRol(value);
-                  settingData("rol", value);
+                  onChangeData("rol", value);
                }}
             >
                <Picker.Item label="Empleado" value="empleado" />
                <Picker.Item label="Administrador" value="administrador" />
             </Picker>
 
-            <Pressable style={styles.loginButton} onPress={loginUser}>
-               <Text style={styles.loginButton.loginButtonText}>
+            <Pressable style={styles.button} onPress={loginUser}>
+               <Text style={styles.buttonText}>
                   Registrate
                </Text>
             </Pressable>
@@ -113,7 +110,7 @@ export default function Login() {
                   ¿Ya tienes una cuenta? !Inicia sesión!
                </Text>
             </Pressable>
-         </View>
+         </Card>
       </SafeAreaView>
    );
 }
@@ -121,35 +118,49 @@ export default function Login() {
 const styles = StyleSheet.create({
    container: {
       flex: 1,
-      backgroundColor: "#c8dfe2",
+      backgroundColor: "#eeeeee",
       alignItems: "center",
       justifyContent: "center",
    },
 
-   loginContainer: {
+   ContainerWeb: {
+      backgroundColor: "#fff",
+      padding: 100,
+      paddingHorizontal: 100,
+      borderRadius: 15,
+   },
+
+   containerMobile: {
       backgroundColor: "#fff",
       padding: 50,
-      borderRadius: 30,
-      shadowOffset: { width: 2, height: 2 },
-      shadowOpacity: 0.2,
+      borderRadius: 15,
    },
 
    title: {
-      color: "#2e4957",
+      color: "#376CE4",
       fontSize: 40,
       fontWeight: 700,
       textAlign: "center",
       marginBottom: 20,
    },
 
-   label: {
+   labelWeb: {
       textAlign: "center",
       fontSize: 18,
       marginBottom: 10,
+      width: 400,
+      color: "#5A3B32",
+   },
+
+   labelMobile: {
+      textAlign: "center",
+      fontSize: 18,
+      marginBottom: 10,
+      color: "#5A3B32",
    },
 
    form: {
-      borderColor: "#2e4967",
+      borderColor: "#376CE4",
       borderWidth: 1,
       borderRadius: 15,
       paddingHorizontal: 10,
@@ -158,23 +169,25 @@ const styles = StyleSheet.create({
       fontSize: 15,
    },
 
-   loginButton: {
-      backgroundColor: "#2e4957",
+   button: {
+      backgroundColor: "#376CE4",
       paddingVertical: 10,
       borderRadius: 20,
 
-      loginButtonText: {
-         color: "white",
-         textAlign: "center",
-         fontSize: 20,
-         fontWeight: 500,
-      },
    },
 
+   buttonText: {
+      color: "white",
+      textAlign: "center",
+      fontSize: 20,
+      fontWeight: 500,
+   },
+   
    registerLink: {
-      color: "#4a5575",
+      color: "#5A3B32",
       marginTop: 10,
       fontWeight: 400,
       fontSize: 15,
+      textAlign: 'center'
    },
 });

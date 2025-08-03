@@ -7,7 +7,6 @@ import {
    StyleSheet,
    Text,
    TextInput,
-   View,
    Alert,
    KeyboardAvoidingView,
    Platform,
@@ -32,11 +31,17 @@ export default function Login() {
    async function loginUser() {
       try {
          const res = await axios.post(
-            "https://83l3lgt8-5000.usw3.devtunnels.ms/users/login",
+            "http://127.0.0.1:5000/users/login",
             data
          );
 
          if (res.status == 200) {
+            {
+               Platform.OS == 'web'? 
+               alert("Inicio de sesión corrercto."): 
+               Alert.alert("Inicio de sesión correcto.")
+            }
+
             navigation.navigate("Home");
          } else {
             {
@@ -56,11 +61,11 @@ export default function Login() {
             <Card
                style={
                   Platform.OS === "web"
-                     ? styles.loginContainerWeb
-                     : styles.loginContainerMobile
+                     ? styles.containerWeb
+                     : styles.containerMobile
                }
             >
-               <Text style={styles.title}>Iniciar Sesión</Text>
+               <Text style={styles.title}>Lavandería</Text>
                <Text style={Platform.OS == 'web'? styles.labelWeb : styles.labelMobile}>Correo Electrónico</Text>
                <TextInput
                   style={styles.form}
@@ -98,47 +103,49 @@ export default function Login() {
 const styles = StyleSheet.create({
    container: {
       flex: 1,
-      backgroundColor: "#c8dfe2",
+      backgroundColor: "#eee",
       alignItems: "center",
       justifyContent: "center",
    },
 
-   loginContainerWeb: {
+   containerWeb: {
       backgroundColor: "#fff",
       padding: 100,
-      paddingHorizontal: 200,
+      paddingHorizontal: 100,
       borderRadius: 15,
    },
 
-   loginContainerMobile: {
+   containerMobile: {
       backgroundColor: "#fff",
       padding: 50,
       borderRadius: 15,
    },
 
    title: {
-      color: "#2e4957",
+      color: "#376CE4",
       fontSize: 40,
       fontWeight: 700,
       textAlign: "center",
       marginBottom: 20,
+   },
+   
+   labelWeb: {
+      textAlign: "center",
+      fontSize: 18,
+      marginBottom: 10,
+      width: 400,
+      color: '#5A3B32'
    },
 
    labelMobile: {
       textAlign: "center",
       fontSize: 18,
       marginBottom: 10,
-   },
-
-   labelWeb: {
-      textAlign: "center",
-      fontSize: 18,
-      marginBottom: 10,
-      width: 400,
+      color: '#5A3B32'
    },
 
    form: {
-      borderColor: "#2e4967",
+      borderColor: "#376CE4",
       borderWidth: 1,
       borderRadius: 15,
       paddingHorizontal: 10,
@@ -148,7 +155,7 @@ const styles = StyleSheet.create({
    },
 
    loginButton: {
-      backgroundColor: "#2e4957",
+      backgroundColor: "#376CE4",
       paddingVertical: 10,
       borderRadius: 20,
 
@@ -161,7 +168,7 @@ const styles = StyleSheet.create({
    },
 
    registerLink: {
-      color: "#4a5575",
+      color: "#5A3B32",
       marginTop: 10,
       fontWeight: 400,
       fontSize: 15,
