@@ -26,7 +26,7 @@ export default function UpdateClient() {
    const updateClient = async () => {
       try {
          await axios.put(
-            `https://f2rrdchq-5000.usw3.devtunnels.ms/clients/update/${client.id}`,
+            `https://83l3lgt8-5000.usw3.devtunnels.ms/clients/update/${client.id}`,
             data
          );
 

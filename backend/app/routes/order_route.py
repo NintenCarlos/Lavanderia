@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from app.controllers.order_controller import create_order, create_order_detail, add_garment, add_service, get_order_detail
+from app.controllers.order_controller import create_order, create_order_detail, add_garment, add_service, get_order_detail, get_counting, get_orders_dashboard, get_pending_orders_dashboard
 import datetime 
 
 order_bp = Blueprint("order_bp", __name__, url_prefix="/orders")
@@ -43,7 +43,6 @@ def create():
         "order": order.to_dict()
     }), 200
             
-
 @order_bp.route("/get-order-detail/<int:order_id>", methods=["GET"])
 def create_ord_det(order_id): 
     
@@ -61,4 +60,45 @@ def create_ord_det(order_id):
             "err": e
         }), 500
         
+@order_bp.route("/get-order-dashboard", methods=["GET"])
+def get_orders_dash(): 
+    pagination = int(request.args.get("pagination"))
     
+    try: 
+        data = get_orders_dashboard(pagination)
+        return jsonify(data), 200
+    
+    except Exception as e: 
+        print("Error al obtener las ordenes")
+        print(f"Error: {e}")
+        return jsonify({
+            "err": "Error al obtener las ordenes"
+        }), 200
+  
+@order_bp.route("/get-order-pending-dashboard", methods=["GET"])
+def get_orders_pending(): 
+    pagination = int(request.args.get("pagination"))
+    
+    try: 
+        data = get_pending_orders_dashboard(pagination)
+        return jsonify(data), 200
+    
+    except Exception as e: 
+        print("Error al obtener las ordenes")
+        print(f"Error: {e}")
+        return jsonify({
+            "err": "Error al obtener las ordenes"
+        }), 200
+     
+@order_bp.route("/get-order-counting", methods=["GET"])
+def get_counting_endpoint(): 
+    try: 
+        data = get_counting()
+        return jsonify(data), 200
+    
+    except Exception as e: 
+        print("Error al obtener las ordenes")
+        print(f"Error: {e}")
+        return jsonify({
+            "err": "Error al obtener las ordenes"
+        }), 200

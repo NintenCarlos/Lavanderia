@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import axios from "axios";
 
+
 export default function Login() {
    const navigation = useNavigation();
 
@@ -26,26 +27,36 @@ export default function Login() {
 
    const [rol, setRol] = useState("");
 
-   const settingData = (field, value) => {
-      setData((prev) => ({
-         ...prev,
-         [field]: value,
-      }));
-   };
+   const onChangeData = (key, value) => {
+      const user = {...data}; 
+
+      if (user) {
+         user[key] = value
+      }
+      
+      setData(user)
+      console.log(user)
+   }
+
 
    async function loginUser() {
       try {
+         await axios.post(
+            "https://83l3lgt8-5000.usw3.devtunnels.ms/users/register",
+            data
+         );
 
-         const res = await axios.post("https://f2rrdchq-5000.usw3.devtunnels.ms/users/register", data)
+         Platform.OS == "web"
+            ? alert("Se ha registrado al usuario")
+            : Alert.alert("Se ha registrado al usuario");
 
-         if (res.status == 200) {
-            {Platform.OS == 'web'? alert('Se ha registrado al usuario'): Alert.alert("Se ha registrado al usuario")}
-            navigation.navigate("Login");
-         } else {
-            {Platform.OS == 'web'? alert('Hubo un error al hace el registro.'): Alert.alert("Hubo un error al hace el registro.")}
-
-         }
+         navigation.navigate("Login");
       } catch (error) {
+         {
+            Platform.OS == "web"
+               ? alert("Hubo un error al hace el registro.")
+               : Alert.alert("Hubo un error al hace el registro.");
+         }
          console.error(error);
       }
    }
@@ -58,25 +69,25 @@ export default function Login() {
             <Text style={styles.label}>Nombre</Text>
             <TextInput
                style={styles.form}
-               onChangeText={(text) => settingData("name", text)}
+               onChangeText={(text) => onChangeData("name", text)}
             />
 
             <Text style={styles.label}>Correo Electrónico</Text>
             <TextInput
                style={styles.form}
-               onChangeText={(text) => settingData("email", text)}
+               onChangeText={(text) => onChangeData("email", text)}
             />
 
             <Text style={styles.label}>Contraseña</Text>
             <TextInput
                style={styles.form}
-               onChangeText={(text) => settingData("password", text)}
+               onChangeText={(text) => onChangeData("password", text)}
                secureTextEntry
             />
 
             <Text style={styles.label}>Rol del empleado</Text>
             <Picker
-               style={Platform.OS == "web" ? styles.form : {marginBottom: 20}}
+               style={Platform.OS == "web" ? styles.form : { marginBottom: 20 }}
                selectedValue={rol}
                onValueChange={(value) => {
                   setRol(value);
@@ -125,7 +136,7 @@ const styles = StyleSheet.create({
 
    title: {
       color: "#2e4957",
-      fontSize: 36,
+      fontSize: 40,
       fontWeight: 700,
       textAlign: "center",
       marginBottom: 20,
@@ -133,7 +144,7 @@ const styles = StyleSheet.create({
 
    label: {
       textAlign: "center",
-      fontSize: 16,
+      fontSize: 18,
       marginBottom: 10,
    },
 
@@ -164,5 +175,6 @@ const styles = StyleSheet.create({
       color: "#4a5575",
       marginTop: 10,
       fontWeight: 400,
+      fontSize: 15,
    },
 });

@@ -11,7 +11,7 @@ export default function OrderResume() {
    const getOrderDetail = async () => {
       try {
          const data = await axios.get(
-            "http://127.0.0.1:5000/orders/get-order-detail/9"
+            "https://83l3lgt8-5000.usw3.devtunnels.ms/orders/get-order-detail/9"
          );
          setOrder(data.data.order);
       } catch (err) {

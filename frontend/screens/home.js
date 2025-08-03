@@ -26,7 +26,7 @@ export default function Home() {
    useEffect(() => {
       axios
          .get(
-            `https://f2rrdchq-5000.usw3.devtunnels.ms/clients/search/name?name=`
+            `https://83l3lgt8-5000.usw3.devtunnels.ms/clients/search/name?name=`
          )
          .then((res) => setClients(res.data))
          .catch((err) => console.error("Error al conectar:", err));
@@ -39,7 +39,7 @@ export default function Home() {
    const searchClientsByName = async (name) => {
       await axios
          .get(
-            `https://f2rrdchq-5000.usw3.devtunnels.ms/clients/search/name?name=${name}`
+            `https://83l3lgt8-5000.usw3.devtunnels.ms/clients/search/name?name=${name}`
          )
          .then((res) => setFilteredClients(res.data))
          .catch((err) => console.error("Error al conectar:", err));
@@ -54,7 +54,7 @@ export default function Home() {
 
       try {
          const res = await axios.get(
-            `https://f2rrdchq-5000.usw3.devtunnels.ms/clients/search/phone?phone=${phone}`
+            `https://83l3lgt8-5000.usw3.devtunnels.ms/clients/search/phone?phone=${phone}`
          );
 
          setFilteredClients([res.data]);
@@ -67,7 +67,7 @@ export default function Home() {
    const deleteClient = async (id) => {
       try {
          await axios.delete(
-            `https://f2rrdchq-5000.usw3.devtunnels.ms/clients/delete/${id}`
+            `https://83l3lgt8-5000.usw3.devtunnels.ms/clients/delete/${id}`
          );
 
          const updatedClients = clients.filter((client) => client.id !== id);
@@ -81,9 +81,9 @@ export default function Home() {
       } catch (error) {
          {
             Platform.OS == "web"
-               ? alert("Ha ocurrido un error al momento de eliminar al cliente.")
+               ? alert("El cliente aún tiene ordenes por atender.")
                : Alert.alert(
-                    "Ha ocurrido un error al momento de eliminar al cliente."
+                    "El cliente aún tiene ordenes por atender."
                  );
          }
 

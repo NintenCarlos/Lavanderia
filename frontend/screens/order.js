@@ -12,7 +12,6 @@ import { Picker } from "@react-native-picker/picker";
 import { Button, Card } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import constants from "../constants";
-import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 
 const { garments, services } = constants;

@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
 from app.models.user import User
 from app.database.db import db
-from app.controllers.user_controller import login_user, logout_user, update_user, toggle_user_status, get_user_logs
+from app.controllers.user_controller import delete_user, get_users, login_user, logout_user, update_user, toggle_user_status, get_user_logs
 
 user_bp = Blueprint("users", __name__, url_prefix="/users")
 
@@ -37,6 +37,10 @@ def create_user():
         'user': new_user.to_dict() 
     }), 200
         
+@user_bp.route("/get", methods=["GET"])
+def get(): 
+    users = get_users()
+    return [user.to_dict() for user in users]
 
 @user_bp.route("/login", methods=["POST"])
 def login(): 
@@ -53,7 +57,6 @@ def login():
         'error': 'Algo salió mal al intentar iniciar sesión. Intentelo de nuevo, o cree una cuenta.'
     }), 400
     
-
 @user_bp.route('/logout/<int:user_id>', methods=["POST"])
 def logout(user_id):
     logout_user(user_id)
@@ -76,6 +79,10 @@ def update(user_id):
     return jsonify({
         'error': 'Algo salió mal. Intentelo de nuevo.'
     }), 400
+
+@user_bp.route("/delete/<int:user_id>", methods=["DELETE"])
+def delete(user_id):
+    return delete_user(user_id) 
     
 @user_bp.route('/change/<int:user_id>/status', methods=['PATCH'])
 def change_status(user_id): 
@@ -96,6 +103,7 @@ def change_status(user_id):
     
 @user_bp.route('/get-logs/<int:user_id>', methods=['GET'])
 def get_logs(user_id): 
+    
     logs = get_user_logs(user_id)
     data = []
     
