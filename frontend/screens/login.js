@@ -42,7 +42,7 @@ export default function Login() {
                Alert.alert("Inicio de sesión correcto.")
             }
 
-            navigation.navigate("Home");
+            navigation.navigate("Dashboard");
          } else {
             {
                Platform.OS == "web"

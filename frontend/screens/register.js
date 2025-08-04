@@ -7,15 +7,13 @@ import {
    StyleSheet,
    Text,
    TextInput,
-   View,
    Alert,
-   ScrollView,
    Platform,
 } from "react-native";
 import axios from "axios";
 import { Card } from "react-native-paper";
 
-export default function Login() {
+export default function Register() {
    const navigation = useNavigation();
 
    const [data, setData] = useState({

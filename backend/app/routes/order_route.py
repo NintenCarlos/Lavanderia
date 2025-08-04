@@ -101,4 +101,4 @@ def get_counting_endpoint():
         print(f"Error: {e}")
         return jsonify({
             "err": "Error al obtener las ordenes"
-        }), 200
+        }), 400

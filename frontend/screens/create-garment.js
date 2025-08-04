@@ -14,13 +14,13 @@ import axios from "axios";
 import { Card } from "react-native-paper";
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
-export default function CreateClient() {
+export default function CreateGarment() {
    const navigation = useNavigation();
 
    const [data, setData] = useState({
-      name: "",
-      phone_number: "",
-      address: "",
+      type: "",
+      description: "",
+      observation: "",
    });
 
    const settingData = (field, value) => {
@@ -30,28 +30,28 @@ export default function CreateClient() {
       }));
    };
 
-   async function createNewClient() {
+   async function createNewGarment() {
       try {
          const res = await axios.post(
-            "http://127.0.0.1:5000/clients/create",
+            "http://127.0.0.1:5000/garments/create",
             data
          );
 
          if (res.status == 200) {
             {
                Platform.OS == "web"
-                  ? alert("Se ha creado el usuario.")
-                  : Alert.alert("Se ha creado el usuario.");
+                  ? alert("Se ha creado la prenda.")
+                  : Alert.alert("Se ha creado la prenda.");
             }
-            navigation.navigate("ListClients");
+            navigation.navigate("ListGarments");
          } else {
             {
                Platform.OS == "web"
                   ? alert(
-                       "Ha ocurrido un error al momento de crear al cliente."
+                       "Ha ocurrido un error al momento de crear la prenda."
                     )
                   : Alert.alert(
-                       "Ha ocurrido un error al momento de crear al cliente."
+                       "Ha ocurrido un error al momento de crear la prenda."
                     );
             }
          }
@@ -72,25 +72,25 @@ export default function CreateClient() {
             {/* Contenido del label */}
 
       
-               <Pressable onPress={(()=>{navigation.navigate('ListClients')})} >
+               <Pressable onPress={(()=>{navigation.navigate('ListGarments')})} >
                   <FontAwesome5 name="arrow-left" size={20} color="#5A3B32" />
                </Pressable>
 
             <Text  style={
                   Platform.OS == "web" ? styles.titleWeb : styles.titleMobile
-               }>Crear Cliente</Text>
+               }>Crear Prenda</Text>
 
             <Text
                style={
                   Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
                }
             >
-               Nombre(s)
+               Tipo de Prenda
             </Text>
             <TextInput
                style={styles.form}
-               value={data.name}
-               onChangeText={(text) => settingData("name", text)}
+               value={data.type}
+               onChangeText={(text) => settingData("type", text)}
             />
 
             <Text
@@ -98,12 +98,12 @@ export default function CreateClient() {
                   Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
                }
             >
-               Número Telefónico
+               Descripción breve de la prenda
             </Text>
             <TextInput
                style={styles.form}
-               value={data.phone_number}
-               onChangeText={(text) => settingData("phone_number", text)}
+               value={data.description}
+               onChangeText={(text) => settingData("description", text)}
             />
 
             <Text
@@ -111,16 +111,16 @@ export default function CreateClient() {
                   Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
                }
             >
-               Dirección
+               Observaciones
             </Text>
             <TextInput
                style={styles.form}
-               value={data.address}
-               onChangeText={(text) => settingData("address", text)}
+               value={data.observation}
+               onChangeText={(text) => settingData("observation", text)}
             />
 
-            <Pressable style={styles.button} onPress={createNewClient}>
-               <Text style={styles.buttonText}>Crear Cliente</Text>
+            <Pressable style={styles.button} onPress={createNewGarment}>
+               <Text style={styles.buttonText}>Crear Prenda</Text>
             </Pressable>
          </Card>
       </SafeAreaView>

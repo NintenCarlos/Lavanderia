@@ -61,7 +61,13 @@ def get_user_logs(user_id):
     return logs
     
 def get_users(): 
-    return User.query.filter().all()
+    users =  User.query.filter().all() 
+    
+    if not users: 
+        return None
+    
+    data = [user.to_dict() for user in users]
+    return data
 
 def delete_user(user_id):
     user = User.query.get(user_id)

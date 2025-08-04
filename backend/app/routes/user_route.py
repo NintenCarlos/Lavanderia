@@ -40,7 +40,11 @@ def create_user():
 @user_bp.route("/get", methods=["GET"])
 def get(): 
     users = get_users()
-    return [user.to_dict() for user in users]
+    
+    return jsonify({
+        "msg": "Listado de usuarios obtenidos éxito.",
+        "users": users
+    })
 
 @user_bp.route("/login", methods=["POST"])
 def login(): 
@@ -82,7 +86,16 @@ def update(user_id):
 
 @user_bp.route("/delete/<int:user_id>", methods=["DELETE"])
 def delete(user_id):
-    return delete_user(user_id) 
+    user = delete_user(user_id)
+    
+    if not user: 
+        return jsonify({
+            "err": "No se encontró el usuario."
+        }), 400
+    
+    return  jsonify({
+        "user": user.to_dict()
+    })
     
 @user_bp.route('/change/<int:user_id>/status', methods=['PATCH'])
 def change_status(user_id): 
