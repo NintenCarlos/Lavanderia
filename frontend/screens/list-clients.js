@@ -11,15 +11,15 @@ import {
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import axios from "axios";
-import { Card } from "react-native-paper";
+import { Button, Card, TextInput } from "react-native-paper";
 import EditClientModal from "../extras/EditClient";
 
 export default function ListClients() {
    const [clients, setClients] = useState([
       {
          id: 1,
-         name: "Jorge Nitales",
-         address: "El centro",
+         name: "Jorge López",
+         address: "Pozo Bravo",
          phone_number: "449 123 4567",
       },
    ]);
@@ -34,16 +34,22 @@ export default function ListClients() {
       phone_number: "",
    });
 
+   const [parameter, setParameter] = useState("");
+
    useEffect(() => {
       getClients();
    }, []);
 
    const getClients = async () => {
       const { data } = await axios.get("http://127.0.0.1:5000/clients/search");
-
-      console.log(data);
       setClients(data);
    };
+
+   
+   const filteredClients = async (filter) => {
+      const { data } = await axios.get(`http://127.0.0.1:5000/clients/search?filter=${filter}&parameter=${parameter}`)
+      setClients(data)
+   }
 
    const handleUpdateClient = async () => {
       try {
@@ -134,6 +140,32 @@ export default function ListClients() {
                   >
                      <Text style={styles.editDeleteText}>Agregar Cliente</Text>
                   </Pressable>
+               </View>
+
+               <TextInput
+                  activeUnderlineColor="#5A3B32"
+                  placeholderTextColor="#5A3B32"
+                  underlineColor="#5A3B32"
+                  style={styles.textInput}
+                  placeholder="Buscar Clientes"
+                  value={parameter}
+
+                  onChangeText={((text)=> {setParameter(text)})}
+               />
+               <View>
+                  <View style={styles.addButtonContainer}>
+                     <Pressable style={styles.filterButtons} onPress={(()=>{filteredClients("name")})}>
+                        <Text style={styles.editDeleteText}>Nombre</Text>
+                     </Pressable>
+
+                     <Pressable style={styles.filterButtons} onPress={(()=>{filteredClients("phone")})}>
+                        <Text style={styles.editDeleteText}>Teléfono</Text>
+                     </Pressable>
+
+                     <Pressable style={styles.filterButtons} onPress={(()=>{getClients(), setParameter("")})}  >
+                        <Text style={styles.editDeleteText}>Reset</Text>
+                     </Pressable>
+                  </View>
                </View>
 
                {clients?.map((client, index) => (
@@ -247,6 +279,18 @@ const styles = StyleSheet.create({
       alignSelf: "center",
    },
 
+   filterButtons: {
+      backgroundColor: "#5A3B32",
+      flexDirection: "row",
+      borderRadius: 15,
+      padding: 10,
+   },
+
+   textInput: {
+      backgroundColor: '#eee',
+      marginVertical: 5
+   },
+
    clientCard: {
       backgroundColor: "#DC6629",
       padding: 10,
@@ -282,6 +326,7 @@ const styles = StyleSheet.create({
    editDeleteText: {
       color: "white",
       fontWeight: 500,
+      alignSelf: "center",
    },
 
    delete: {
@@ -296,6 +341,7 @@ const styles = StyleSheet.create({
       justifyContent: "flex-end",
       flexDirection: "row",
       margin: 10,
+      gap: 10,
    },
 
    add: {

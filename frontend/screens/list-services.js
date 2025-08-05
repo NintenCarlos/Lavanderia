@@ -153,7 +153,7 @@ export default function ListServices() {
                         Descripción: {service.description}
                      </Text>
                      <Text style={styles.clientText}>
-                        Observaciones: {service.price}
+                        Precio del Servicio: {service.price}
                      </Text>
 
                      <View style={styles.clientButtons}>

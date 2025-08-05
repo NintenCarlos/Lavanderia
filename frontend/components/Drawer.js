@@ -23,6 +23,16 @@ export function DrawerNavigation() {
          }}
       >
          <Drawer.Screen
+            name="Clients"
+            component={ClientsNavigation}
+            options={{
+               drawerLabel: "Clientes",
+               drawerIcon: ({ color, size }) => (
+                  <FontAwesome5 name="address-book" size={size} color={color} />
+               ),
+            }}
+         />
+         <Drawer.Screen
             name="Login"
             component={LoginNavigation}
             options={{
@@ -51,17 +61,6 @@ export function DrawerNavigation() {
                drawerLabel: "Usuarios",
                drawerIcon: ({ color, size }) => (
                   <FontAwesome5 name="user-alt" size={size} color={color} />
-               ),
-            }}
-         />
-
-         <Drawer.Screen
-            name="Clients"
-            component={ClientsNavigation}
-            options={{
-               drawerLabel: "Clientes",
-               drawerIcon: ({ color, size }) => (
-                  <FontAwesome5 name="address-book" size={size} color={color} />
                ),
             }}
          />
