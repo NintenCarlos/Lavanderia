@@ -14,8 +14,8 @@ def create_order(client_id, user_id, estimated_date, total_price):
     
     return order
 
-def add_garment(order_id, type, description, notes): 
-    garment = Garment(order_id = order_id, type = type, description = description, observation = notes)
+def add_garment(order_id, type, description, observation): 
+    garment = Garment(order_id = order_id, type = type, description = description, observation = observation)
     
     db.session.add(garment)
     db.session.commit()
@@ -30,8 +30,8 @@ def add_service(name, description, price):
     
     return service
 
-def create_order_detail(garment_id, service_id, quantity): 
-    order_detail = OrderDetail(garment_id = garment_id, service_id = service_id, quantity = quantity)
+def create_order_detail(order_id, garment_id, service_id, quantity): 
+    order_detail = OrderDetail(order_id = order_id, garment_id = garment_id, service_id = service_id, quantity = quantity)
     
     db.session.add(order_detail)
     db.session.commit()
@@ -42,6 +42,8 @@ def get_order_detail(order_id):
     #Traer la orden
     
     order = Order.query.get(order_id) 
+    
+    
     print("********** Orden ************", order.to_dict())
     order_data =  {
         "order_id": order.id,
@@ -62,7 +64,9 @@ def get_order_detail(order_id):
         }
         
         for s in garment.order_detail: 
-            service = Service.query.get(s.garment_id)            
+            print(s.to_dict())
+            service = Service.query.get(s.service_id)  
+            print("service", s.garment_id)          
             print(service.to_dict())
             service_data = {
                 "name": service.name,
@@ -140,7 +144,7 @@ def get_orders_dashboard(pagination):
 
 def get_pending_orders_dashboard(pagination):
     orders_recieved = Order.query.filter_by(state = "recibido").order_by(Order.created_at.desc())
-    orders_process = Order.query.filter_by(state = "recibido").order_by(Order.created_at.desc())
+    orders_process = Order.query.filter_by(state = "en proceso").order_by(Order.created_at.desc())
    
     if pagination > 1: 
         orders_recieved = orders_recieved.offset(pagination * 10)      

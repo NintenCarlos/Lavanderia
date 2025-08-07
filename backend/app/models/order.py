@@ -14,8 +14,9 @@ class Order(db.Model):
     
     state = db.Column(db.String(20), default="recibido") #Recibido, En proceso, Entregado. 
     total = db.Column(db.Integer, nullable=False)
-    pagado = db.Column(db.Boolean, default=False)
-    
+    pagado = db.Column(db.Boolean, default=False)    
+    garments = db.relationship('Garment', backref='order', lazy= True)
+
     
     # Relación de pagos
     

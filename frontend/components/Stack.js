@@ -8,6 +8,8 @@ import CreateGarment from "../screens/create-garment";
 import CreateService from "../screens/create-services";
 import ListServices from "../screens/list-services";
 import ListUsers from "../screens/list-users";
+import CreateOrder from "../screens/order";
+import OrderResume from "../screens/order_resume";
 
 const Stack = createStackNavigator();
 
@@ -42,6 +44,15 @@ export function ServicesNavigation() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
          <Stack.Screen name="ListServices" component={ListServices} />
          <Stack.Screen name="CreateService" component={CreateService} />
+      </Stack.Navigator>
+   );
+}
+
+export function OrderNavigation() {
+   return (
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+         <Stack.Screen name="CreateOrder" component={CreateOrder} />
+         <Stack.Screen name="OrderDetail" component={OrderResume} />
       </Stack.Navigator>
    );
 }

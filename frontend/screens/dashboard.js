@@ -1,9 +1,18 @@
-import { Platform, Pressable, StyleSheet, View } from "react-native";
+import {
+   Alert,
+   Platform,
+   Pressable,
+   ScrollView,
+   StyleSheet,
+   View,
+} from "react-native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { Card, Text } from "react-native-paper";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import GetOrderComponent from "../components/Get-Orders";
+import GetPendingOrderComponent from "../components/Get-Pending-Orders";
 
 export default function Dashboard() {
    const navigate = useNavigation();
@@ -15,8 +24,13 @@ export default function Dashboard() {
       clients: 0,
    });
 
+   const [orders, setOrders] = useState([]);
+   const [pendingOrders, setPendingOrders] = useState();
+
    useEffect(() => {
+      getOrders();
       getCounting();
+      getPendingOrders();
    }, []);
 
    const getCounting = async () => {
@@ -28,52 +42,101 @@ export default function Dashboard() {
       setCounting(data);
    };
 
+   const getOrders = async () => {
+      try {
+         const { data } = await axios.get(
+            "http://127.0.0.1:5000/orders/get-order-dashboard?pagination=1"
+         );
+         console.log(data);
+
+         setOrders(data);
+      } catch (error) {
+         {
+            Platform.OS == "web"
+               ? alert("Hubo un error al obtener las ordenes")
+               : Alert.alert("Hubo un error al obtener las ordenes.");
+         }
+      }
+   };
+
+   const getPendingOrders = async () => {
+      try {
+         const { data } = await axios.get(
+            "http://127.0.0.1:5000/orders/get-order-pending-dashboard?pagination=1"
+         );
+
+         setPendingOrders(data);
+      } catch (error) {
+         {
+            Platform.OS == "web"
+               ? alert("Hubo un error al obtener las ordenes")
+               : Alert.alert("Hubo un error al obtener las ordenes.");
+         }
+      }
+   };
+
    return (
-      <View style={styles.container}>
-         <Card
-            style={
-               Platform.OS == "web"
-                  ? styles.containerWeb
-                  : { ...styles.containerMobile, marginTop: 30 }
-            }
-         >
-            <View style={styles.titleContainer}>
-               <Text style={styles.title}>Dashboard</Text>
-               <Pressable
-                  style={styles.barsButton}
-                  onPress={() => {
-                     navigate.dispatch(DrawerActions.toggleDrawer());
-                  }}
-               >
-                  <FontAwesome5 name="bars" size={30} color="#376CE4" />
-               </Pressable>
-            </View>
+      <ScrollView
+         contentContainerStyle={{
+            paddingBottom: 100,
+            height: "100vh",
+         }}
+      >
+         <View style={styles.container}>
+            <Card
+               style={
+                  Platform.OS == "web"
+                     ? styles.containerWeb
+                     : { ...styles.containerMobile, marginTop: 30 }
+               }
+            >
+               <View style={styles.titleContainer}>
+                  <Text style={styles.title}>Dashboard</Text>
+                  <Pressable
+                     style={styles.barsButton}
+                     onPress={() => {
+                        navigate.dispatch(DrawerActions.toggleDrawer());
+                     }}
+                  >
+                     <FontAwesome5 name="bars" size={30} color="#376CE4" />
+                  </Pressable>
+               </View>
 
-            <Card style={styles.cardCounting}>
-               <Text style={styles.subtitle}>Conteo de Datos</Text>
+               <Card style={styles.cardCounting}>
+                  <Text style={styles.subtitle}>Conteo de Datos</Text>
 
-               <View style={{ ...styles.rowing, alignItems: "center" }}>
-                  <View>
-                     <Text style={styles.labelWeb}>No. Clientes</Text>
-                     <Text style={styles.numberWeb}>{counting.clients}</Text>
-                  </View>
+                  <View style={{ ...styles.rowing, alignItems: "center" }}>
+                     <View>
+                        <Text style={styles.labelWeb}>No. Clientes</Text>
+                        <Text style={styles.numberWeb}>{counting.clients}</Text>
+                     </View>
 
-                  <View>
-                     <Text style={styles.labelWeb}>No. Prendas</Text>
-                     <Text style={styles.numberWeb}>{counting.garments}</Text>
+                     <View>
+                        <Text style={styles.labelWeb}>No. Prendas</Text>
+                        <Text style={styles.numberWeb}>
+                           {counting.garments}
+                        </Text>
+                     </View>
+                     <View>
+                        <Text style={styles.labelWeb}>No. Servicios</Text>
+                        <Text style={styles.numberWeb}>
+                           {counting.services}
+                        </Text>
+                     </View>
+                     <View>
+                        <Text style={styles.labelWeb}>No. Usuarios</Text>
+                        <Text style={styles.numberWeb}>{counting.users}</Text>
+                     </View>
                   </View>
-                  <View>
-                     <Text style={styles.labelWeb}>No. Servicios</Text>
-                     <Text style={styles.numberWeb}>{counting.services}</Text>
-                  </View>
-                  <View>
-                     <Text style={styles.labelWeb}>No. Usuarios</Text>
-                     <Text style={styles.numberWeb}>{counting.users}</Text>
-                  </View>
+               </Card>
+
+               <View style={styles.ordersContainer}>
+                  <GetOrderComponent orders={orders} />
+                  <GetPendingOrderComponent orders={pendingOrders}/>
                </View>
             </Card>
-         </Card>
-      </View>
+         </View>
+      </ScrollView>
    );
 }
 
@@ -89,7 +152,7 @@ const styles = StyleSheet.create({
       width: "95%",
       backgroundColor: "#fff",
       padding: 20,
-      paddingHorizontal: 100,
+      paddingHorizontal: 50,
       borderRadius: 15,
    },
 
@@ -150,5 +213,13 @@ const styles = StyleSheet.create({
       alignSelf: "center",
       marginTop: 10,
       fontWeight: 700,
+   },
+
+   ordersContainer: {
+      flexDirection: "row",
+      justifyContent: 'space-between',
+      flexWrap: "wrap",
+      marginTop: 20,
+      gap: 10
    },
 });

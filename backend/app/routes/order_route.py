@@ -23,7 +23,7 @@ def create():
             order_id= order.id,
             type= garment["type"], 
             description= garment["description"],
-            notes= garment["observation"]
+            observation= garment["observation"]
         )
         
         for service in garment["services"]: 
@@ -34,6 +34,7 @@ def create():
             )
                         
             create_order_detail(
+                order_id=order.id,
                 garment_id=new_garment.id, 
                 service_id= new_service.id, 
                 quantity=service["quantity"])
@@ -57,7 +58,7 @@ def create_ord_det(order_id):
     except Exception as e:
         return jsonify({
             "msg": "Ocurrió un error",
-            "err": e
+            "err": str(e)
         }), 500
         
 @order_bp.route("/get-order-dashboard", methods=["GET"])

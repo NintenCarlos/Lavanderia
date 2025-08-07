@@ -5,8 +5,8 @@ import {
    ClientsNavigation,
    GarmentsNavigation,
    LoginNavigation,
+   OrderNavigation,
    ServicesNavigation,
-   StackNavigation,
    UsersNavigation,
 } from "./Stack";
 
@@ -22,6 +22,32 @@ export function DrawerNavigation() {
             drawerInactiveTintColor: "#5A3B32",
          }}
       >
+         <Drawer.Screen
+            name="Dashboard"
+            component={Dashboard}
+            options={{
+               drawerLabel: "Dashboard",
+               drawerIcon: ({ color, size }) => (
+                  <FontAwesome5 name="chart-bar" size={size} color={color} />
+               ),
+            }}
+         />
+
+         <Drawer.Screen
+            name="Orders"
+            component={OrderNavigation}
+            options={{
+               drawerLabel: "Ordenes",
+               drawerIcon: ({ color, size }) => (
+                  <FontAwesome5
+                     name="clipboard-list"
+                     size={size}
+                     color={color}
+                  />
+               ),
+            }}
+         />
+
          <Drawer.Screen
             name="Clients"
             component={ClientsNavigation}
@@ -39,17 +65,6 @@ export function DrawerNavigation() {
                drawerLabel: "Inicio",
                drawerIcon: ({ color, size }) => (
                   <FontAwesome5 name="home" size={size} color={color} />
-               ),
-            }}
-         />
-
-         <Drawer.Screen
-            name="Dashboard"
-            component={Dashboard}
-            options={{
-               drawerLabel: "Dashboard",
-               drawerIcon: ({ color, size }) => (
-                  <FontAwesome5 name="chart-bar" size={size} color={color} />
                ),
             }}
          />

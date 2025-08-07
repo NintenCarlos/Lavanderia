@@ -120,7 +120,7 @@ const CreateOrder = () => {
    const createOrderDetail = async () => {
       try {
          console.log(order);
-         navigation.navigate('OrderR') 
+         navigation.navigate('OrderDetail') 
       } catch (err) {}
    };
 
