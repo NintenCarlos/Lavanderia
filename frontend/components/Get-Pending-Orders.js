@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
 
    title: {
       color: "#5A3B32",
-      fontSize: 40,
+      fontSize: 24,
       fontWeight: 700,
       textAlign: "center",
       marginVertical: 10,
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
 
    ordertitle: {
       color: "white",
-      fontSize: 20,
+      fontSize: 18,
       fontWeight: 600,
    },
 

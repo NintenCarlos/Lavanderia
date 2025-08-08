@@ -19,6 +19,16 @@ const services = [
       quantity: 0,
       unitPrice: 0,
    },
+   {
+      name: "Lavado por Kilo",
+      quantity: 0,
+      unitPrice: 0,
+   },
+   {
+      name: "Planchado por Docena",
+      quantity: 0,
+      unitPrice: 0,
+   },
 ];
 
 const garments = [
@@ -33,6 +43,8 @@ const garments = [
    "Falda",
    "Saco",
    "Playera",
+   "Ropa por Kilo",
+   "Ropa por Docena"
 ];
 
 export default {

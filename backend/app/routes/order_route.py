@@ -29,7 +29,7 @@ def create():
         for service in garment["services"]: 
             new_service = add_service(
                 name=service["name"],
-                description= "Descripción Momentanea",
+                description= service["description"],
                 price= service["unitPrice"]
             )
                         

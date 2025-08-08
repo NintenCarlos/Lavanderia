@@ -11,7 +11,7 @@ import {
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import axios from "axios";
-import { Button, Card, TextInput } from "react-native-paper";
+import { Card, TextInput } from "react-native-paper";
 import EditClientModal from "../extras/EditClient";
 
 export default function ListClients() {
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
       width: "95%",
       backgroundColor: "#fff",
       padding: 20,
-      paddingHorizontal: 100,
+      paddingHorizontal: 20,
       borderRadius: 15,
    },
 
@@ -288,7 +288,8 @@ const styles = StyleSheet.create({
 
    textInput: {
       backgroundColor: '#eee',
-      marginVertical: 5
+      marginVertical: 5,
+      height: 40,
    },
 
    clientCard: {

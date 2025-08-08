@@ -23,17 +23,6 @@ export function DrawerNavigation() {
          }}
       >
          <Drawer.Screen
-            name="Dashboard"
-            component={Dashboard}
-            options={{
-               drawerLabel: "Dashboard",
-               drawerIcon: ({ color, size }) => (
-                  <FontAwesome5 name="chart-bar" size={size} color={color} />
-               ),
-            }}
-         />
-
-         <Drawer.Screen
             name="Orders"
             component={OrderNavigation}
             options={{
@@ -44,6 +33,17 @@ export function DrawerNavigation() {
                      size={size}
                      color={color}
                   />
+               ),
+            }}
+         />
+
+         <Drawer.Screen
+            name="Dashboard"
+            component={Dashboard}
+            options={{
+               drawerLabel: "Dashboard",
+               drawerIcon: ({ color, size }) => (
+                  <FontAwesome5 name="chart-bar" size={size} color={color} />
                ),
             }}
          />

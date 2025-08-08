@@ -8,8 +8,8 @@ import CreateGarment from "../screens/create-garment";
 import CreateService from "../screens/create-services";
 import ListServices from "../screens/list-services";
 import ListUsers from "../screens/list-users";
-import CreateOrder from "../screens/order";
 import OrderResume from "../screens/order_resume";
+import { CreateOrder } from "../screens/order";
 
 const Stack = createStackNavigator();
 
