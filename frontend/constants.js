@@ -1,33 +1,33 @@
 const services = [
    {
       name: "Lavado",
-      quantity: 0,
-      unitPrice: 14,
+      quantity: '0',
+      unitPrice: '14',
    },
    {
       name: "Planchado",
-      quantity: 0,
-      unitPrice: 20,
+      quantity: '0',
+      unitPrice: '20',
    },
    {
       name: "Tintoreria",
-      quantity: 0,
-      unitPrice: 0,
+      quantity: '0',
+      unitPrice: '0',
    },
    {
       name: "Especial",
-      quantity: 0,
-      unitPrice: 0,
+      quantity: '0',
+      unitPrice: '0',
    },
    {
       name: "Lavado por Kilo",
-      quantity: 0,
-      unitPrice: 0,
+      quantity: '0',
+      unitPrice: '0',
    },
    {
       name: "Planchado por Docena",
-      quantity: 0,
-      unitPrice: 0,
+      quantity: '0',
+      unitPrice: '0',
    },
 ];
 

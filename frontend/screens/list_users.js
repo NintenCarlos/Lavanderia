@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
    View,
-   Text,
    StyleSheet,
    Pressable,
    ScrollView,
@@ -11,83 +10,81 @@ import {
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import axios from "axios";
-import { Card } from "react-native-paper";
-import EditServiceModal from "../extras/EditService";
+import { Card, Text } from "react-native-paper";
+import EdituserModal from "../extras/EditUser";
 
-export default function ListServices() {
-   const [services, setServices] = useState([
+export default function ListUsers() {
+   const [users, setUsers] = useState([
       {
          id: 1,
-         name: "Lavado",
-         description: "Proceso de lavado completo por docena.",
-         price: 22,
+         name: "Tío Neto",
+         email: "viva_la_coca@utma.edu.mx",
+         created_at: "Tue, 29 Jul 2025 12:37:51 GMT",
+         rol: "empleado",
       },
    ]);
 
    const navigate = useNavigation();
 
    const [modalVisible, setModalVisible] = useState(false);
-   const [updatedService, setUpdatedService] = useState({
+   const [updatedUser, setUpdatedUser] = useState({
       id: null,
       name: "",
-      description: "",
-      price: 0,
+      email: "",
+      created_at: "",
+      rol: "empleado",
    });
 
    useEffect(() => {
-      getServices();
+      getUsers();
    }, []);
 
-   const getServices = async () => {
-      const { data } = await axios.get(
-         "http://127.0.0.1:5000/service/get-all"
-      );
+   const getUsers = async () => {
+      const { data } = await axios.get("http://127.0.0.1:5000/users/get");
 
       console.log(data);
-      setServices(data.services);
+      setUsers(data.users);
    };
 
    const handleUpdateGarment = async () => {
       try {
          await axios.put(
-            `http://127.0.0.1:5000/service/update/${updatedService.id}`,
-            updatedService
+            `http://127.0.0.1:5000/users/update/${updatedUser.id}`,
+            updatedUser
          );
 
-         const updatedList = services.map((service) =>
-            service.id === updatedService.id ? updatedService : service
+         const updatedList = users.map((user) =>
+            user.id === updatedUser.id ? updatedUser : user
          );
 
-         setServices(updatedList);
+         setUsers(updatedList);
          setModalVisible(false);
 
          Platform.OS === "web"
-            ? alert("Servicio actualizado correctamente.")
-            : Alert.alert("Servicio actualizado correctamente.");
+            ? alert("Usuario actualizado correctamente.")
+            : Alert.alert("Usuario actualizado correctamente.");
       } catch (error) {
-         console.error("Error al actualizar servicio:", error);
+         console.error("Error al actualizar usuario:", error);
       }
    };
 
-   const deleteService = async (id) => {
+   const deleteUser = async (id) => {
       try {
-         await axios.delete(`http://127.0.0.1:5000/service/delete/${id}`);
+         await axios.delete(`http://127.0.0.1:5000/users/delete/${id}`);
 
-         const updatedServices = services.filter(
-            (service) => service.id !== id
-         );
-         setServices(updatedServices);
+         const updatedUsers = users.filter((user) => user.id !== id);
+         setUsers(updatedUsers);
 
          {
             Platform.OS == "web"
-               ? alert("El servicio se ha elimiando.")
-               : Alert.alert("El servicio se ha elimiando.");
+               ? alert("El usuario se ha elimiando.")
+               : Alert.alert("El usuario se ha elimiando.");
          }
       } catch (error) {
          {
             Platform.OS == "web"
-               ? alert("El servicio aún tiene ordenes por atender.")
-               : Alert.alert("El servicio aún tiene ordenes por atender.");
+               ? alert("El usuario aún tiene ordenes por atender.")
+               : Alert.alert("El usuario aún tiene ordenes por atender.");
          }
 
          console.error("Hay un error", error);
@@ -105,8 +102,8 @@ export default function ListServices() {
             <Card
                style={
                   Platform.OS == "web"
-                     ? styles.containerWeb
-                     : { ...styles.containerMobile, marginTop: 30 }
+                     ? styles.card
+                     : { ...styles.card, marginTop: 30 }
                }
             >
                <View style={styles.titleContainer}>
@@ -117,7 +114,7 @@ export default function ListServices() {
                            : styles.titleMobile
                      }
                   >
-                     Servicios
+                     Lista de Usuarios
                   </Text>
 
                   <Pressable
@@ -134,33 +131,32 @@ export default function ListServices() {
                   <Pressable
                      style={styles.add}
                      onPress={() => {
-                        navigate.navigate("CreateService");
+                        navigate.navigate("CreateUser");
                      }}
                   >
-                     <Text style={styles.editDeleteText}>Agregar Servicio</Text>
+                     <Text style={styles.editDeleteText}>Agregar Usuario</Text>
                   </Pressable>
                </View>
 
-               {services?.map((service, index) => (
+               {users?.map((user, index) => (
                   <Card style={styles.clientCard} key={index}>
                      <Text style={styles.clientTitle}>
-                        Servicio No. {service.id}
+                        Usuario No. {user.id}
+                     </Text>
+                     <Text style={styles.clientText}>Nombre: {user.name}</Text>
+                     <Text style={styles.clientText}>Rol: {user.rol}</Text>
+                     <Text style={styles.clientText}>
+                        Correo Electrónico: {user.email}
                      </Text>
                      <Text style={styles.clientText}>
-                        Tipo de Prenda: {service.name}
-                     </Text>
-                     <Text style={styles.clientText}>
-                        Descripción: {service.description}
-                     </Text>
-                     <Text style={styles.clientText}>
-                        Precio del Servicio: {service.price}
+                        Creado el: {user.created_at}
                      </Text>
 
                      <View style={styles.clientButtons}>
                         <Pressable
                            style={styles.edit}
                            onPress={() => {
-                              setUpdatedService(service);
+                              setUpdatedUser(user);
                               setModalVisible(true);
                            }}
                         >
@@ -177,7 +173,7 @@ export default function ListServices() {
                         <Pressable
                            style={styles.delete}
                            onPress={() => {
-                              deleteService(service.id);
+                              deleteUser(user.id);
                            }}
                         >
                            <Text style={styles.editDeleteText}>Borrar</Text>
@@ -195,11 +191,11 @@ export default function ListServices() {
             </Card>
          </View>
 
-         <EditServiceModal
+         <EdituserModal
             visible={modalVisible}
             onClose={() => setModalVisible(false)}
-            service={updatedService}
-            onChange={setUpdatedService}
+            user={updatedUser}
+            onChange={setUpdatedUser}
             onSave={handleUpdateGarment}
          />
       </ScrollView>
@@ -214,20 +210,13 @@ const styles = StyleSheet.create({
       marginTop: 20,
    },
 
-   containerWeb: {
+   card: {
       width: "95%",
       backgroundColor: "#fff",
       padding: 20,
-      paddingHorizontal: 100,
+      paddingHorizontal: 20,
       borderRadius: 15,
       marginBottom: 100,
-   },
-
-   containerMobile: {
-      width: "95%",
-      backgroundColor: "#fff",
-      padding: 20,
-      borderRadius: 15,
    },
 
    titleContainer: {
@@ -237,14 +226,14 @@ const styles = StyleSheet.create({
 
    titleWeb: {
       color: "#376CE4",
-      fontSize: 40,
+      fontSize: 32,
       fontWeight: 700,
       marginVertical: 10,
    },
 
    titleMobile: {
       color: "#376CE4",
-      fontSize: 28,
+      fontSize: 24,
       fontWeight: 700,
       marginVertical: 10,
    },

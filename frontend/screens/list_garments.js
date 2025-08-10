@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
    View,
-   Text,
    StyleSheet,
    Pressable,
    ScrollView,
@@ -11,85 +10,83 @@ import {
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import axios from "axios";
-import { Card } from "react-native-paper";
-import EdituserModal from "../extras/EditUser";
+import { Card, Text } from "react-native-paper";
+import EditGarmentModal from "../extras/EditGarment";
 
-export default function ListUsers() {
-   const [users, setUsers] = useState([
+export default function ListGarments() {
+   const [garments, setGarments] = useState([
       {
          id: 1,
-         name: "Tío Neto",
-         email: "viva_la_coca@utma.edu.mx",
-         created_at: "Tue, 29 Jul 2025 12:37:51 GMT",
-         rol: 'empleado'
+         type: "Playera del Neca",
+         description: "Playera que tiene que ser lavada por los mejores.",
+         observation: "N/A",
       },
    ]);
 
    const navigate = useNavigation();
 
    const [modalVisible, setModalVisible] = useState(false);
-   const [updatedUser, setUpdatedUser] = useState({
+   const [updatedGarment, setUpdatedGarment] = useState({
       id: null,
-      name: "",
-      email: "",
-      created_at: "",
-      rol: "empleado"
+      type: "",
+      description: "",
+      observation: "",
    });
 
    useEffect(() => {
-      getUsers();
+      getGarments();
    }, []);
 
-   const getUsers = async () => {
+   const getGarments = async () => {
       const { data } = await axios.get(
-         "http://127.0.0.1:5000/users/get"
+         "http://127.0.0.1:5000/garments/get-all"
       );
 
       console.log(data);
-      setUsers(data.users);
+      setGarments(data.garments);
    };
 
    const handleUpdateGarment = async () => {
       try {
          await axios.put(
-            `http://127.0.0.1:5000/users/update/${updatedUser.id}`,
-            updatedUser
+            `http://127.0.0.1:5000/garments/update/${updatedGarment.id}`,
+            updatedGarment
          );
 
-         const updatedList = users.map((user) =>
-            user.id === updatedUser.id ? updatedUser : user
+         const updatedList = garments.map((garment) =>
+            garment.id === updatedGarment.id ? updatedGarment : garment
          );
 
-         setUsers(updatedList);
+         setGarments(updatedList);
          setModalVisible(false);
 
          Platform.OS === "web"
-            ? alert("Usuario actualizado correctamente.")
-            : Alert.alert("Usuario actualizado correctamente.");
+            ? alert("Prenda actualizada correctamente.")
+            : Alert.alert("Prenda actualizada correctamente.");
       } catch (error) {
-         console.error("Error al actualizar usuario:", error);
+         console.error("Error al actualizar prenda:", error);
       }
    };
 
-   const deleteUser = async (id) => {
+   const deleteGarment = async (id) => {
       try {
-         await axios.delete(`http://127.0.0.1:5000/users/delete/${id}`);
+         await axios.delete(`http://127.0.0.1:5000/garments/delete/${id}`);
 
-         const updatedUsers = users.filter(
-            (user) => user.id !== id
+         const updatedGarments = garments.filter(
+            (garment) => garment.id !== id
          );
-         setUsers(updatedUsers);
+         setGarments(updatedGarments);
 
          {
             Platform.OS == "web"
-               ? alert("El usuario se ha elimiando.")
-               : Alert.alert("El usuario se ha elimiando.");
+               ? alert("La prenda se ha elimiando.")
+               : Alert.alert("La prenda se ha elimiando.");
          }
       } catch (error) {
          {
             Platform.OS == "web"
-               ? alert("El usuario aún tiene ordenes por atender.")
-               : Alert.alert("El usuario aún tiene ordenes por atender.");
+               ? alert("La prenda aún tiene ordenes por atender.")
+               : Alert.alert("La prenda aún tiene ordenes por atender.");
          }
 
          console.error("Hay un error", error);
@@ -107,8 +104,8 @@ export default function ListUsers() {
             <Card
                style={
                   Platform.OS == "web"
-                     ? styles.containerWeb
-                     : { ...styles.containerMobile, marginTop: 30 }
+                     ? styles.card
+                     : { ...styles.card, marginTop: 30 }
                }
             >
                <View style={styles.titleContainer}>
@@ -119,7 +116,7 @@ export default function ListUsers() {
                            : styles.titleMobile
                      }
                   >
-                     Lista de Usuarios
+                     Prendas
                   </Text>
 
                   <Pressable
@@ -132,40 +129,37 @@ export default function ListUsers() {
                   </Pressable>
                </View>
 
-              {/*  <View style={styles.addButtonContainer}>
+               <View style={styles.addButtonContainer}>
                   <Pressable
                      style={styles.add}
                      onPress={() => {
-                        navigate.navigate("CreateService");
+                        navigate.navigate("CreateGarment");
                      }}
                   >
-                     <Text style={styles.editDeleteText}>Agregar Servicio</Text>
+                     <Text style={styles.editDeleteText}>Agregar Prenda</Text>
                   </Pressable>
-               </View> */}
+               </View>
 
-               {users?.map((user, index) => (
+               {garments?.map((garment, index) => (
                   <Card style={styles.clientCard} key={index}>
                      <Text style={styles.clientTitle}>
-                        Usuario No. {user.id}
+                        Prenda No. {garment.id}
                      </Text>
                      <Text style={styles.clientText}>
-                        Nombre: {user.name}
+                        Tipo de Prenda: {garment.type}
                      </Text>
                      <Text style={styles.clientText}>
-                        Rol: {user.rol}
+                        Descripción: {garment.description}
                      </Text>
                      <Text style={styles.clientText}>
-                        Correo Electrónico: {user.email}
-                     </Text>
-                     <Text style={styles.clientText}>
-                        Creado el: {user.created_at}
+                        Observaciones: {garment.observation}
                      </Text>
 
                      <View style={styles.clientButtons}>
                         <Pressable
                            style={styles.edit}
                            onPress={() => {
-                              setUpdatedUser(user);
+                              setUpdatedGarment(garment);
                               setModalVisible(true);
                            }}
                         >
@@ -182,7 +176,7 @@ export default function ListUsers() {
                         <Pressable
                            style={styles.delete}
                            onPress={() => {
-                              deleteUser(user.id);
+                              deleteGarment(garment.id);
                            }}
                         >
                            <Text style={styles.editDeleteText}>Borrar</Text>
@@ -200,11 +194,11 @@ export default function ListUsers() {
             </Card>
          </View>
 
-         <EdituserModal 
+         <EditGarmentModal
             visible={modalVisible}
             onClose={() => setModalVisible(false)}
-            user={updatedUser}
-            onChange={setUpdatedUser}
+            garment={updatedGarment}
+            onChange={setUpdatedGarment}
             onSave={handleUpdateGarment}
          />
       </ScrollView>
@@ -219,20 +213,13 @@ const styles = StyleSheet.create({
       marginTop: 20,
    },
 
-   containerWeb: {
+   card: {
       width: "95%",
       backgroundColor: "#fff",
       padding: 20,
-      paddingHorizontal: 100,
+      paddingHorizontal: 20,
       borderRadius: 15,
       marginBottom: 100,
-   },
-
-   containerMobile: {
-      width: "95%",
-      backgroundColor: "#fff",
-      padding: 20,
-      borderRadius: 15,
    },
 
    titleContainer: {
@@ -242,14 +229,14 @@ const styles = StyleSheet.create({
 
    titleWeb: {
       color: "#376CE4",
-      fontSize: 40,
+      fontSize: 32,
       fontWeight: 700,
       marginVertical: 10,
    },
 
    titleMobile: {
       color: "#376CE4",
-      fontSize: 28,
+      fontSize: 24,
       fontWeight: 700,
       marginVertical: 10,
    },
@@ -273,7 +260,7 @@ const styles = StyleSheet.create({
 
    clientText: {
       color: "white",
-      marginBottom: 2,
+      marginTop: 5,
    },
 
    clientButtons: {

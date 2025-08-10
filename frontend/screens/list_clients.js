@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
    View,
-   Text,
    StyleSheet,
    Pressable,
    ScrollView,
@@ -11,7 +10,7 @@ import {
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import axios from "axios";
-import { Card, TextInput } from "react-native-paper";
+import { Card, TextInput, Text } from "react-native-paper";
 import EditClientModal from "../extras/EditClient";
 
 export default function ListClients() {
@@ -45,11 +44,12 @@ export default function ListClients() {
       setClients(data);
    };
 
-   
    const filteredClients = async (filter) => {
-      const { data } = await axios.get(`http://127.0.0.1:5000/clients/search?filter=${filter}&parameter=${parameter}`)
-      setClients(data)
-   }
+      const { data } = await axios.get(
+         `http://127.0.0.1:5000/clients/search?filter=${filter}&parameter=${parameter}`
+      );
+      setClients(data);
+   };
 
    const handleUpdateClient = async () => {
       try {
@@ -106,8 +106,8 @@ export default function ListClients() {
             <Card
                style={
                   Platform.OS == "web"
-                     ? styles.containerWeb
-                     : { ...styles.containerMobile, marginTop: 30 }
+                     ? styles.card
+                     : { ...styles.card, marginTop: 30 }
                }
             >
                <View style={styles.titleContainer}>
@@ -149,20 +149,36 @@ export default function ListClients() {
                   style={styles.textInput}
                   placeholder="Buscar Clientes"
                   value={parameter}
-
-                  onChangeText={((text)=> {setParameter(text)})}
+                  onChangeText={(text) => {
+                     setParameter(text);
+                  }}
                />
                <View>
                   <View style={styles.addButtonContainer}>
-                     <Pressable style={styles.filterButtons} onPress={(()=>{filteredClients("name")})}>
+                     <Pressable
+                        style={styles.filterButtons}
+                        onPress={() => {
+                           filteredClients("name");
+                        }}
+                     >
                         <Text style={styles.editDeleteText}>Nombre</Text>
                      </Pressable>
 
-                     <Pressable style={styles.filterButtons} onPress={(()=>{filteredClients("phone")})}>
+                     <Pressable
+                        style={styles.filterButtons}
+                        onPress={() => {
+                           filteredClients("phone");
+                        }}
+                     >
                         <Text style={styles.editDeleteText}>Teléfono</Text>
                      </Pressable>
 
-                     <Pressable style={styles.filterButtons} onPress={(()=>{getClients(), setParameter("")})}  >
+                     <Pressable
+                        style={styles.filterButtons}
+                        onPress={() => {
+                           getClients(), setParameter("");
+                        }}
+                     >
                         <Text style={styles.editDeleteText}>Reset</Text>
                      </Pressable>
                   </View>
@@ -241,18 +257,11 @@ const styles = StyleSheet.create({
       marginTop: 20,
    },
 
-   containerWeb: {
+   card: {
       width: "95%",
       backgroundColor: "#fff",
       padding: 20,
       paddingHorizontal: 20,
-      borderRadius: 15,
-   },
-
-   containerMobile: {
-      width: "95%",
-      backgroundColor: "#fff",
-      padding: 20,
       borderRadius: 15,
    },
 
@@ -263,14 +272,14 @@ const styles = StyleSheet.create({
 
    titleWeb: {
       color: "#376CE4",
-      fontSize: 40,
+      fontSize: 32,
       fontWeight: 700,
       marginVertical: 10,
    },
 
    titleMobile: {
       color: "#376CE4",
-      fontSize: 28,
+      fontSize: 24,
       fontWeight: 700,
       marginVertical: 10,
    },
@@ -287,7 +296,7 @@ const styles = StyleSheet.create({
    },
 
    textInput: {
-      backgroundColor: '#eee',
+      backgroundColor: "#eee",
       marginVertical: 5,
       height: 40,
    },
@@ -307,7 +316,7 @@ const styles = StyleSheet.create({
 
    clientText: {
       color: "white",
-      marginBottom: 2,
+      marginBottom: 5,
    },
 
    clientButtons: {

@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
-   View,
-   Text,
    SafeAreaView,
    TextInput,
    Pressable,
@@ -11,16 +9,16 @@ import {
    Platform,
 } from "react-native";
 import axios from "axios";
-import { Card } from "react-native-paper";
+import { Card, Text } from "react-native-paper";
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
-export default function CreateService() {
+export default function CreateGarment() {
    const navigation = useNavigation();
 
    const [data, setData] = useState({
-      name: "",
+      type: "",
       description: "",
-      price: 0,
+      observation: "",
    });
 
    const settingData = (field, value) => {
@@ -30,28 +28,28 @@ export default function CreateService() {
       }));
    };
 
-   async function createNewService() {
+   async function createNewGarment() {
       try {
          const res = await axios.post(
-            "http://127.0.0.1:5000/service/create",
+            "http://127.0.0.1:5000/garments/create",
             data
          );
 
          if (res.status == 200) {
             {
                Platform.OS == "web"
-                  ? alert("Se ha creado el servicio.")
-                  : Alert.alert("Se ha creado el servicio.");
+                  ? alert("Se ha creado la prenda.")
+                  : Alert.alert("Se ha creado la prenda.");
             }
-            navigation.navigate("ListServices");
+            navigation.navigate("ListGarments");
          } else {
             {
                Platform.OS == "web"
                   ? alert(
-                       "Ha ocurrido un error al momento de crear el servicio."
+                       "Ha ocurrido un error al momento de crear la prenda."
                     )
                   : Alert.alert(
-                       "Ha ocurrido un error al momento de crear el servicio."
+                       "Ha ocurrido un error al momento de crear la prenda."
                     );
             }
          }
@@ -72,25 +70,25 @@ export default function CreateService() {
             {/* Contenido del label */}
 
       
-               <Pressable onPress={(()=>{navigation.navigate('ListServices')})} >
+               <Pressable onPress={(()=>{navigation.navigate('ListGarments')})} >
                   <FontAwesome5 name="arrow-left" size={20} color="#5A3B32" />
                </Pressable>
 
             <Text  style={
                   Platform.OS == "web" ? styles.titleWeb : styles.titleMobile
-               }>Crear Servicio</Text>
+               }>Crear Prenda</Text>
 
             <Text
                style={
                   Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
                }
             >
-               Nombre del Servicio
+               Tipo de Prenda
             </Text>
             <TextInput
                style={styles.form}
-               value={data.name}
-               onChangeText={(text) => settingData("name", text)}
+               value={data.type}
+               onChangeText={(text) => settingData("type", text)}
             />
 
             <Text
@@ -98,7 +96,7 @@ export default function CreateService() {
                   Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
                }
             >
-               Descripción breve del servicio
+               Descripción breve de la prenda
             </Text>
             <TextInput
                style={styles.form}
@@ -111,15 +109,15 @@ export default function CreateService() {
                   Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
                }
             >
-               Precio del Servicio
+               Observaciones
             </Text>
             <TextInput
                style={styles.form}
-               value={data.price}
-               onChangeText={(text) => settingData("price", text)}
+               value={data.observation}
+               onChangeText={(text) => settingData("observation", text)}
             />
 
-            <Pressable style={styles.button} onPress={createNewService}>
+            <Pressable style={styles.button} onPress={createNewGarment}>
                <Text style={styles.buttonText}>Crear Prenda</Text>
             </Pressable>
          </Card>

@@ -22,7 +22,20 @@ export function DrawerNavigation() {
             drawerInactiveTintColor: "#5A3B32",
          }}
       >
+        
+         
          <Drawer.Screen
+            name="Dashboard"
+            component={Dashboard}
+            options={{
+               drawerLabel: "Dashboard",
+               drawerIcon: ({ color, size }) => (
+                  <FontAwesome5 name="chart-bar" size={size} color={color} />
+               ),
+            }}
+         />
+
+          <Drawer.Screen
             name="Orders"
             component={OrderNavigation}
             options={{
@@ -38,33 +51,12 @@ export function DrawerNavigation() {
          />
 
          <Drawer.Screen
-            name="Dashboard"
-            component={Dashboard}
-            options={{
-               drawerLabel: "Dashboard",
-               drawerIcon: ({ color, size }) => (
-                  <FontAwesome5 name="chart-bar" size={size} color={color} />
-               ),
-            }}
-         />
-
-         <Drawer.Screen
             name="Clients"
             component={ClientsNavigation}
             options={{
                drawerLabel: "Clientes",
                drawerIcon: ({ color, size }) => (
                   <FontAwesome5 name="address-book" size={size} color={color} />
-               ),
-            }}
-         />
-         <Drawer.Screen
-            name="Login"
-            component={LoginNavigation}
-            options={{
-               drawerLabel: "Inicio",
-               drawerIcon: ({ color, size }) => (
-                  <FontAwesome5 name="home" size={size} color={color} />
                ),
             }}
          />

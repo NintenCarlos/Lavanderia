@@ -11,8 +11,8 @@ import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { Card, Text } from "react-native-paper";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import GetOrderComponent from "../components/Get-Orders";
-import GetPendingOrderComponent from "../components/Get-Pending-Orders";
+import GetOrderComponent from "../components/get_order";
+import GetPendingOrderComponent from "../components/get_pending_order";
 
 export default function Dashboard() {
    const navigate = useNavigation();
@@ -22,32 +22,42 @@ export default function Dashboard() {
       services: 0,
       users: 0,
       clients: 0,
+      orders: 0,
+      pending_orders: 0
    });
 
    const [orders, setOrders] = useState([]);
-   const [pendingOrders, setPendingOrders] = useState();
+   const [pendingOrders, setPendingOrders] = useState([]);
+   const [numOrders, setnumOrders] = useState(0);
+   const [numPendingOrders, setNumPendingOrders] = useState(0);
+
+   const [ordersPagination, setOrdersPagination] = useState(1);
+   const [pendingOrdersPagination, setpendingOrdersPagination] = useState(1);
+
+   useEffect(() => {
+      getCounting();
+   }, []);
 
    useEffect(() => {
       getOrders();
-      getCounting();
       getPendingOrders();
-   }, []);
+   }, [ordersPagination, pendingOrdersPagination]);
 
    const getCounting = async () => {
       const { data } = await axios.get(
          "http://127.0.0.1:5000/orders/get-order-counting"
       );
 
-      console.log(data);
       setCounting(data);
+      setnumOrders(data.orders);
+      setNumPendingOrders(data.pending_orders)
    };
 
    const getOrders = async () => {
       try {
          const { data } = await axios.get(
-            "http://127.0.0.1:5000/orders/get-order-dashboard?pagination=1"
+            `http://127.0.0.1:5000/orders/get-order-dashboard?pagination=${ordersPagination}`
          );
-         console.log(data);
 
          setOrders(data);
       } catch (error) {
@@ -59,10 +69,30 @@ export default function Dashboard() {
       }
    };
 
+   const onChangeOrderPagination = (value) => {
+      if (value == "left") {
+         setOrdersPagination(ordersPagination - 1);
+      }
+
+      if (value == "right") {
+         setOrdersPagination(ordersPagination + 1);
+      }
+   };
+
+   const onChangePendingOrderPagination = (value) => {
+      if (value == "left") {
+         setpendingOrdersPagination(pendingOrdersPagination - 1);
+      }
+
+      if (value == "right") {
+         setpendingOrdersPagination(pendingOrdersPagination + 1);
+      }
+   };
+
    const getPendingOrders = async () => {
       try {
          const { data } = await axios.get(
-            "http://127.0.0.1:5000/orders/get-order-pending-dashboard?pagination=1"
+            `http://127.0.0.1:5000/orders/get-order-pending-dashboard?pagination=${pendingOrdersPagination}`
          );
 
          setPendingOrders(data);
@@ -86,12 +116,18 @@ export default function Dashboard() {
             <Card
                style={
                   Platform.OS == "web"
-                     ? styles.containerWeb
-                     : { ...styles.containerMobile, marginTop: 30 }
+                     ? styles.card
+                     : { ...styles.card, marginTop: 30 }
                }
             >
                <View style={styles.titleContainer}>
-                  <Text style={styles.title}>Dashboard</Text>
+                  <Text
+                     style={
+                        Platform.OS == "web" ? styles.titleWeb : styles.titleMobile
+                     }
+                  >
+                     Dashboard
+                  </Text>
                   <Pressable
                      style={styles.barsButton}
                      onPress={() => {
@@ -131,12 +167,23 @@ export default function Dashboard() {
                </Card>
 
                <View style={styles.ordersContainer}>
-                  <GetOrderComponent orders={orders} />
-                  <GetPendingOrderComponent orders={pendingOrders}/>
+                  <GetOrderComponent
+                     orders={orders}
+                     pagination={ordersPagination}
+                     numOrders={numOrders}
+                     newPagination={onChangeOrderPagination}
+                  />
+                  <GetPendingOrderComponent
+                     orders={pendingOrders}
+                     pagination={pendingOrdersPagination}
+                     numOrders={numPendingOrders}
+                     newPagination={onChangePendingOrderPagination}
+                  />
                </View>
             </Card>
          </View>
       </ScrollView>
+
    );
 }
 
@@ -148,31 +195,32 @@ const styles = StyleSheet.create({
       marginTop: 20,
    },
 
-   containerWeb: {
+   card: {
       width: "95%",
       backgroundColor: "#fff",
       padding: 20,
       paddingHorizontal: 20,
-      borderRadius: 15,
+      borderRadius: 10,
    },
 
-   containerMobile: {
-      width: "95%",
-      backgroundColor: "#fff",
-      padding: 20,
-      borderRadius: 15,
-   },
 
    titleContainer: {
       flexDirection: "row",
       justifyContent: "space-between",
    },
 
-   title: {
+   titleWeb: {
       color: "#376CE4",
-      fontSize: 40,
+      fontSize: 32,
       fontWeight: 700,
       textAlign: "center",
+      marginVertical: 10,
+   },
+
+   titleMobile: {
+      color: "#376CE4",
+      fontSize: 24,
+      fontWeight: 700,
       marginVertical: 10,
    },
 
@@ -182,12 +230,12 @@ const styles = StyleSheet.create({
 
    cardCounting: {
       backgroundColor: "rgba(220, 102, 41, 0.9)",
-      padding: 20,
+      padding: 10,
    },
 
    subtitle: {
       color: "#fff",
-      fontSize: 30,
+      fontSize: 24,
       fontWeight: 700,
       textAlign: "center",
       marginBottom: 20,
@@ -209,7 +257,7 @@ const styles = StyleSheet.create({
 
    numberWeb: {
       color: "#5A3B32",
-      fontSize: 40,
+      fontSize: 28,
       alignSelf: "center",
       marginTop: 10,
       fontWeight: 700,
@@ -217,9 +265,8 @@ const styles = StyleSheet.create({
 
    ordersContainer: {
       flexDirection: "row",
-      justifyContent: 'space-between',
+      justifyContent: "space-between",
       flexWrap: "wrap",
       marginTop: 20,
-      gap: 10
    },
 });

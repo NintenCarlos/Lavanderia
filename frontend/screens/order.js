@@ -13,7 +13,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from "react";
 import constants from "../constants";
 
-export function CreateOrder() {
+export default function CreateOrder() {
    const navigate = useNavigation();
 
    const { garments, services } = constants;
@@ -156,8 +156,7 @@ export function CreateOrder() {
                data.garments[garment_id].services[service_id].unitPrice = price;
             }
          } else {
-            data.garments[garment_id].services[service_id][key] =
-               parseFloat(value) || 0;
+            data.garments[garment_id].services[service_id][key] = value;
          }
       }
 
@@ -166,17 +165,20 @@ export function CreateOrder() {
 
    const createOrder = async () => {
       try {
-         const orderToSend = {...order, total: totalOrder}
-         const { data } = await axios.post("http://127.0.0.1:5000/orders/create", orderToSend)
-         console.log(data)
+         const orderToSend = { ...order, total: totalOrder };
+         const { data } = await axios.post(
+            "http://127.0.0.1:5000/orders/create",
+            orderToSend
+         );
+         console.log(data);
 
-         alert("Orden Creada Con Éxito")
+         alert("Orden Creada Con Éxito");
 
-         navigate.navigate("Dashboard")
+         navigate.navigate("Dashboard");
       } catch (error) {
-         alert("ERROr al Crear la orden")
-      }      
-   }
+         alert("ERROr al Crear la orden");
+      }
+   };
 
    return (
       <ScrollView
@@ -186,13 +188,7 @@ export function CreateOrder() {
          }}
       >
          <View style={styles.container}>
-            <Card
-               style={
-                  Platform.OS == "web"
-                     ? styles.containerWeb
-                     : styles.containerMobile
-               }
-            >
+            <Card style={styles.card}>
                <View style={styles.titleContainer}>
                   <Text
                      style={
@@ -423,12 +419,12 @@ export function CreateOrder() {
                                  placeholderTextColor="#5A3B32"
                                  underlineColor="#5A3B32"
                                  style={styles.textInput}
-                                 defaultValue={0}
+                                 defaultValue={"0"}
                                  onBlur={() => calculateTotal()}
                                  onChangeText={(text) => {
                                     onChangeService(
                                        "unitPrice",
-                                       text,
+                                       parseFloat(text),
                                        index,
                                        service_index
                                     );
@@ -468,12 +464,16 @@ export function CreateOrder() {
 
                <Text style={styles.total}>Total: ${totalOrder}</Text>
 
-               <Pressable style={styles.addButton} onPress={(()=> {createOrder()})} >
+               <Pressable
+                  style={styles.addButton}
+                  onPress={() => {
+                     createOrder();
+                  }}
+               >
                   <Text style={styles.buttonText}>Crear Orden</Text>
                </Pressable>
             </Card>
          </View>
-
       </ScrollView>
    );
 }
@@ -483,18 +483,10 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: "#eee",
       alignItems: "center",
-      marginTop: 20,
+      marginVertical: 20,
    },
 
-   containerWeb: {
-      width: "95%",
-      backgroundColor: "#fff",
-      padding: 20,
-      paddingHorizontal: 20,
-      borderRadius: 15,
-   },
-
-   containerMobile: {
+   card: {
       width: "95%",
       backgroundColor: "#fff",
       padding: 20,

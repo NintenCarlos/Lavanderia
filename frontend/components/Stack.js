@@ -1,15 +1,14 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import Login from "../screens/login";
-import Register from "../screens/register";
-import CreateClient from "../screens/create-client";
-import ListClients from "../screens/list-clients";
-import ListGarments from "../screens/list-garments";
-import CreateGarment from "../screens/create-garment";
-import CreateService from "../screens/create-services";
-import ListServices from "../screens/list-services";
-import ListUsers from "../screens/list-users";
 import OrderResume from "../screens/order_resume";
-import { CreateOrder } from "../screens/order";
+import CreateOrder from "../screens/order";
+import ListUsers from "../screens/list_users";
+import ListGarments from "../screens/list_garments";
+import ListServices from "../screens/list_services";
+import ListClients from "../screens/list_clients";
+import CreateClient from "../screens/create_client";
+import CreateService from "../screens/create_service";
+import CreateGarment from "../screens/create_garment";
+import CreateUser from "../screens/create_user";
 
 const Stack = createStackNavigator();
 
@@ -35,6 +34,7 @@ export function UsersNavigation() {
    return (
       <Stack.Navigator screenOptions={{ headerShown: false }}>
          <Stack.Screen name="ListUsers" component={ListUsers} />
+         <Stack.Screen name="CreateUser" component={CreateUser} />
       </Stack.Navigator>
    );
 }
@@ -50,18 +50,12 @@ export function ServicesNavigation() {
 
 export function OrderNavigation() {
    return (
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+         screenOptions={{ headerShown: false }}
+         initialRouteName="CreateOrder"
+      >
          <Stack.Screen name="CreateOrder" component={CreateOrder} />
          <Stack.Screen name="OrderDetail" component={OrderResume} />
-      </Stack.Navigator>
-   );
-}
-
-export function LoginNavigation() {
-   return (
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-         <Stack.Screen name="Login" component={Login} />
-         <Stack.Screen name="Register" component={Register} />
       </Stack.Navigator>
    );
 }

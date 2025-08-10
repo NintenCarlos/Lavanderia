@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
-   View,
-   Text,
    SafeAreaView,
    TextInput,
    Pressable,
@@ -11,16 +9,16 @@ import {
    Platform,
 } from "react-native";
 import axios from "axios";
-import { Card } from "react-native-paper";
+import { Card, Text } from "react-native-paper";
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
-export default function CreateGarment() {
+export default function CreateClient() {
    const navigation = useNavigation();
 
    const [data, setData] = useState({
-      type: "",
-      description: "",
-      observation: "",
+      name: "",
+      phone_number: "",
+      address: "",
    });
 
    const settingData = (field, value) => {
@@ -30,28 +28,28 @@ export default function CreateGarment() {
       }));
    };
 
-   async function createNewGarment() {
+   async function createNewClient() {
       try {
          const res = await axios.post(
-            "http://127.0.0.1:5000/garments/create",
+            "http://127.0.0.1:5000/clients/create",
             data
          );
 
          if (res.status == 200) {
             {
                Platform.OS == "web"
-                  ? alert("Se ha creado la prenda.")
-                  : Alert.alert("Se ha creado la prenda.");
+                  ? alert("Se ha creado el usuario.")
+                  : Alert.alert("Se ha creado el usuario.");
             }
-            navigation.navigate("ListGarments");
+            navigation.navigate("ListClients");
          } else {
             {
                Platform.OS == "web"
                   ? alert(
-                       "Ha ocurrido un error al momento de crear la prenda."
+                       "Ha ocurrido un error al momento de crear al cliente."
                     )
                   : Alert.alert(
-                       "Ha ocurrido un error al momento de crear la prenda."
+                       "Ha ocurrido un error al momento de crear al cliente."
                     );
             }
          }
@@ -72,25 +70,25 @@ export default function CreateGarment() {
             {/* Contenido del label */}
 
       
-               <Pressable onPress={(()=>{navigation.navigate('ListGarments')})} >
+               <Pressable onPress={(()=>{navigation.navigate('ListClients')})} >
                   <FontAwesome5 name="arrow-left" size={20} color="#5A3B32" />
                </Pressable>
 
             <Text  style={
                   Platform.OS == "web" ? styles.titleWeb : styles.titleMobile
-               }>Crear Prenda</Text>
+               }>Crear Cliente</Text>
 
             <Text
                style={
                   Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
                }
             >
-               Tipo de Prenda
+               Nombre(s)
             </Text>
             <TextInput
                style={styles.form}
-               value={data.type}
-               onChangeText={(text) => settingData("type", text)}
+               value={data.name}
+               onChangeText={(text) => settingData("name", text)}
             />
 
             <Text
@@ -98,12 +96,12 @@ export default function CreateGarment() {
                   Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
                }
             >
-               Descripción breve de la prenda
+               Número Telefónico
             </Text>
             <TextInput
                style={styles.form}
-               value={data.description}
-               onChangeText={(text) => settingData("description", text)}
+               value={data.phone_number}
+               onChangeText={(text) => settingData("phone_number", text)}
             />
 
             <Text
@@ -111,16 +109,16 @@ export default function CreateGarment() {
                   Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
                }
             >
-               Observaciones
+               Dirección
             </Text>
             <TextInput
                style={styles.form}
-               value={data.observation}
-               onChangeText={(text) => settingData("observation", text)}
+               value={data.address}
+               onChangeText={(text) => settingData("address", text)}
             />
 
-            <Pressable style={styles.button} onPress={createNewGarment}>
-               <Text style={styles.buttonText}>Crear Prenda</Text>
+            <Pressable style={styles.button} onPress={createNewClient}>
+               <Text style={styles.buttonText}>Crear Cliente</Text>
             </Pressable>
          </Card>
       </SafeAreaView>

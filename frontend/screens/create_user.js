@@ -1,61 +1,52 @@
-import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { Picker } from "@react-native-picker/picker";
+import { useState } from "react";
 import {
-   View,
-   Text,
-   SafeAreaView,
-   TextInput,
    Pressable,
+   SafeAreaView,
    StyleSheet,
+   TextInput,
    Alert,
    Platform,
 } from "react-native";
 import axios from "axios";
-import { Card } from "react-native-paper";
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { Card, Text } from "react-native-paper";
 
-export default function CreateClient() {
+export default function CreateUser() {
    const navigation = useNavigation();
 
    const [data, setData] = useState({
       name: "",
-      phone_number: "",
-      address: "",
+      email: "",
+      password: "",
+      rol: "empleado",
    });
 
-   const settingData = (field, value) => {
-      setData((prev) => ({
-         ...prev,
-         [field]: value,
-      }));
+   const onChangeData = (key, value) => {
+      const user = { ...data };
+
+      if (user) {
+         user[key] = value;
+      }
+
+      setData(user);
    };
 
-   async function createNewClient() {
+   async function loginUser() {
       try {
-         const res = await axios.post(
-            "http://127.0.0.1:5000/clients/create",
-            data
-         );
+         await axios.post("http://127.0.0.1:5000/users/register", data);
 
-         if (res.status == 200) {
-            {
-               Platform.OS == "web"
-                  ? alert("Se ha creado el usuario.")
-                  : Alert.alert("Se ha creado el usuario.");
-            }
-            navigation.navigate("ListClients");
-         } else {
-            {
-               Platform.OS == "web"
-                  ? alert(
-                       "Ha ocurrido un error al momento de crear al cliente."
-                    )
-                  : Alert.alert(
-                       "Ha ocurrido un error al momento de crear al cliente."
-                    );
-            }
-         }
+         Platform.OS == "web"
+            ? alert("Se ha registrado al usuario")
+            : Alert.alert("Se ha registrado al usuario");
+
+         navigation.navigate("ListUsers");
       } catch (error) {
+         {
+            Platform.OS == "web"
+               ? alert("Hubo un error al hace el registro.")
+               : Alert.alert("Hubo un error al hace el registro.");
+         }
          console.error(error);
       }
    }
@@ -65,32 +56,22 @@ export default function CreateClient() {
          <Card
             style={
                Platform.OS == "web"
-                  ? styles.containerWeb
+                  ? styles.ContainerWeb
                   : styles.containerMobile
             }
          >
-            {/* Contenido del label */}
-
-      
-               <Pressable onPress={(()=>{navigation.navigate('ListClients')})} >
-                  <FontAwesome5 name="arrow-left" size={20} color="#5A3B32" />
-               </Pressable>
-
-            <Text  style={
-                  Platform.OS == "web" ? styles.titleWeb : styles.titleMobile
-               }>Crear Cliente</Text>
+            <Text style={styles.title}>Crear Usuario</Text>
 
             <Text
                style={
                   Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
                }
             >
-               Nombre(s)
+               Nombre
             </Text>
             <TextInput
                style={styles.form}
-               value={data.name}
-               onChangeText={(text) => settingData("name", text)}
+               onChangeText={(text) => onChangeData("name", text)}
             />
 
             <Text
@@ -98,12 +79,11 @@ export default function CreateClient() {
                   Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
                }
             >
-               Número Telefónico
+               Correo Electrónico
             </Text>
             <TextInput
                style={styles.form}
-               value={data.phone_number}
-               onChangeText={(text) => settingData("phone_number", text)}
+               onChangeText={(text) => onChangeData("email", text)}
             />
 
             <Text
@@ -111,16 +91,33 @@ export default function CreateClient() {
                   Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
                }
             >
-               Dirección
+               Contraseña
             </Text>
             <TextInput
                style={styles.form}
-               value={data.address}
-               onChangeText={(text) => settingData("address", text)}
+               onChangeText={(text) => onChangeData("password", text)}
+               secureTextEntry
             />
 
-            <Pressable style={styles.button} onPress={createNewClient}>
-               <Text style={styles.buttonText}>Crear Cliente</Text>
+            <Text
+               style={
+                  Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
+               }
+            >
+               Rol del empleado
+            </Text>
+            <Picker
+               style={Platform.OS == "web" ? styles.form : { marginBottom: 20 }}
+               onValueChange={(value) => {
+                  onChangeData("rol", value);
+               }}
+            >
+               <Picker.Item label="Empleado" value="empleado" />
+               <Picker.Item label="Administrador" value="administrador" />
+            </Picker>
+
+            <Pressable style={styles.button} onPress={loginUser}>
+               <Text style={styles.buttonText}>Registrate</Text>
             </Pressable>
          </Card>
       </SafeAreaView>
@@ -130,12 +127,12 @@ export default function CreateClient() {
 const styles = StyleSheet.create({
    container: {
       flex: 1,
-      backgroundColor: "#eee",
+      backgroundColor: "#eeeeee",
       alignItems: "center",
       justifyContent: "center",
    },
 
-   containerWeb: {
+   ContainerWeb: {
       backgroundColor: "#fff",
       padding: 100,
       paddingHorizontal: 100,
@@ -144,25 +141,16 @@ const styles = StyleSheet.create({
 
    containerMobile: {
       backgroundColor: "#fff",
-      padding: 70,
+      padding: 50,
       borderRadius: 15,
    },
 
-
-   titleWeb: {
+   title: {
       color: "#376CE4",
       fontSize: 40,
       fontWeight: 700,
       textAlign: "center",
       marginBottom: 20,
-   },
-
-   titleMobile: {
-      color: "#376CE4",
-      fontSize: 30,
-      fontWeight: 700,
-      textAlign: "center",
-      marginVertical: 10,
    },
 
    labelWeb: {
@@ -201,5 +189,13 @@ const styles = StyleSheet.create({
       textAlign: "center",
       fontSize: 20,
       fontWeight: 500,
+   },
+
+   registerLink: {
+      color: "#5A3B32",
+      marginTop: 10,
+      fontWeight: 400,
+      fontSize: 15,
+      textAlign: "center",
    },
 });
