@@ -5,6 +5,7 @@ from app.models.order_detail import OrderDetail
 from app.models.service import Service
 from app.models.client import Client
 from app.models.user import User
+from sqlalchemy import or_
 
 def create_order(client_id, user_id, estimated_date, total_price): 
     order = Order(client_id = client_id, user_id = user_id, estimated_delivery_date = estimated_date, total = total_price)
@@ -41,14 +42,18 @@ def create_order_detail(order_id, garment_id, service_id, quantity):
 def get_order_detail(order_id): 
     #Traer la orden
     
-    order = Order.query.get(order_id) 
+    order = Order.query.get(order_id)
+    client = Client.query.get(order.client_id) 
+    user = User.query.get(order.user_id)
     
     
     print("********** Orden ************", order.to_dict())
     order_data =  {
         "order_id": order.id,
-        "client": order.clients.id,
+        "client": client.name,
+        "user": user.name,
         "status": order.state,
+        "total": order.total,
         "garments": []
     }
 
@@ -57,6 +62,7 @@ def get_order_detail(order_id):
     for garment in garments: 
         print("********** Prenda ************", garment.to_dict())
         garment_data = {
+            "garment_id": garment.id,
             "type": garment.type, 
             "description": garment.description, 
             "observation": garment.observation,
@@ -69,6 +75,7 @@ def get_order_detail(order_id):
             print("service", s.garment_id)          
             print(service.to_dict())
             service_data = {
+                "service_id": service.id,
                 "name": service.name,
                 "description": service.description,
                 "unitPrice": service.price,
@@ -135,8 +142,8 @@ def get_orders_dashboard(pagination):
     orders = Order.query.filter().order_by(Order.created_at.desc()).limit(10)
     
     if pagination > 1: 
-        orders = orders.offset(pagination * 10)
-    
+        orders = orders.offset((pagination - 1) * 10)
+     
     return create_order_table(orders)
 
 
@@ -147,8 +154,8 @@ def get_pending_orders_dashboard(pagination):
     orders_process = Order.query.filter_by(state = "en proceso").order_by(Order.created_at.desc())
    
     if pagination > 1: 
-        orders_recieved = orders_recieved.offset(pagination * 10)      
-        orders_process = orders_process.offset(pagination * 10)
+        orders_recieved = orders_recieved.offset((pagination - 1) * 5).limit(5)
+        orders_process = orders_process.offset((pagination - 1) * 5).limit(5)
     
     orders = orders_process.all() + orders_recieved.all()
     return create_order_table(orders)
@@ -158,12 +165,16 @@ def get_counting():
     num_services = Service.query.count()
     num_clients = Client.query.count()
     num_users = User.query.count()
+    num_orders = Order.query.count()
+    num_pending_orders = Order.query.filter(or_(Order.state == 'recibido', Order.state == 'en proceso')).count()
     
     data = {
         "garments": num_garments,
         "services": num_services,
         "clients": num_clients,
-        "users": num_users
+        "users": num_users,
+        "orders": num_orders,
+        "pending_orders": num_pending_orders
     }
     
     return data
