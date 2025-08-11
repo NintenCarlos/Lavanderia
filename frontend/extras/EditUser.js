@@ -39,6 +39,7 @@ export default function EdituserModal({
                   activeUnderlineColor="#5A3B32"
                   placeholderTextColor="#5A3B32"
                   underlineColor="#5A3B32"
+                  secureTextEntry
                   style={styles.textInput}
                   value={user.password}
                   onChangeText={(text) => onChange({ ...user, password: text })}

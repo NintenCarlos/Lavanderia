@@ -41,8 +41,8 @@ export default function CreateClient() {
          if (res.status == 200) {
             {
                Platform.OS == "web"
-                  ? alert("Se ha creado el usuario.")
-                  : Alert.alert("Se ha creado el usuario.");
+                  ? alert("Se ha creado el cliente.")
+                  : Alert.alert("Se ha creado el cliente.");
             }
             navigation.navigate("ListClients");
          } else {

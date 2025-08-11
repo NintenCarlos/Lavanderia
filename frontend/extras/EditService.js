@@ -16,14 +16,20 @@ export default function EditServiceModal({
 
                <Text style={styles.label}>Nombre del servicio</Text>
                <TextInput
-                  style={styles.form}
+                  activeUnderlineColor="#5A3B32"
+                  placeholderTextColor="#5A3B32"
+                  underlineColor="#5A3B32"
+                  style={styles.textInput}
                   value={service.name}
                   onChangeText={(text) => onChange({ ...service, name: text })}
                />
 
                <Text style={styles.label}>Descripción breve del servicio</Text>
                <TextInput
-                  style={styles.form}
+                  activeUnderlineColor="#5A3B32"
+                  placeholderTextColor="#5A3B32"
+                  underlineColor="#5A3B32"
+                  style={styles.textInput}
                   value={service.description}
                   onChangeText={(text) =>
                      onChange({ ...service, description: text })
@@ -32,7 +38,10 @@ export default function EditServiceModal({
 
                <Text style={styles.label}>Precio del servicio</Text>
                <TextInput
-                  style={styles.form}
+                  activeUnderlineColor="#5A3B32"
+                  placeholderTextColor="#5A3B32"
+                  underlineColor="#5A3B32"
+                  style={styles.textInput}
                   value={service.price}
                   onChangeText={(text) => onChange({ ...service, price: text })}
                />

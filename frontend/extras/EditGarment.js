@@ -17,6 +17,9 @@ export default function EditGarmentModal({
 
                <Text style={styles.label}>Tipo de prenda</Text>
                <TextInput
+                  activeUnderlineColor="#5A3B32"
+                  placeholderTextColor="#5A3B32"
+                  underlineColor="#5A3B32"
                   style={styles.textInput}
                   value={garment.type}
                   onChangeText={(text) => onChange({ ...garment, type: text })}
@@ -24,6 +27,9 @@ export default function EditGarmentModal({
 
                <Text style={styles.label}>Descripción breve de la prenda</Text>
                <TextInput
+                  activeUnderlineColor="#5A3B32"
+                  placeholderTextColor="#5A3B32"
+                  underlineColor="#5A3B32"
                   style={styles.textInput}
                   value={garment.description}
                   onChangeText={(text) =>
@@ -33,6 +39,9 @@ export default function EditGarmentModal({
 
                <Text style={styles.label}>Observaciones</Text>
                <TextInput
+                  activeUnderlineColor="#5A3B32"
+                  placeholderTextColor="#5A3B32"
+                  underlineColor="#5A3B32"
                   style={styles.textInput}
                   value={garment.observation}
                   onChangeText={(text) =>
