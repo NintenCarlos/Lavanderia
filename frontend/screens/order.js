@@ -7,10 +7,14 @@ import {
 } from "react-native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { Card, Text, TextInput } from "react-native-paper";
-import { useNavigation, DrawerActions } from "@react-navigation/native";
+import {
+   useNavigation,
+   DrawerActions,
+   useFocusEffect,
+} from "@react-navigation/native";
 import axios from "axios";
 import { Picker } from "@react-native-picker/picker";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import constants from "../constants";
 
 export default function CreateOrder() {
@@ -38,16 +42,14 @@ export default function CreateOrder() {
       garments: [{ ...defaultGarment }],
    });
 
-   useEffect(() => {
-      getClients();
-      getUsers();
-      onChangeUserClient("estimated_delivery_date", "");
-   }, []);
-
-   useEffect(() => {
-      calculateTotal();
-      console.log(order);
-   }, [order]);
+   useFocusEffect(
+      useCallback(() => {
+         getClients();
+         getUsers();
+         onChangeUserClient("estimated_delivery_date", "");
+         calculateTotal();
+      }, [])
+   );
 
    const calculateTotal = () => {
       let subtotal = 0;
@@ -462,7 +464,7 @@ export default function CreateOrder() {
                   </Card>
                ))}
 
-               <Text style={styles.total}>Total: ${totalOrder}</Text>
+               <Text style={styles.total}>Total: ${totalOrder.toFixed(2)}</Text>
 
                <Pressable
                   style={styles.addButton}
@@ -484,6 +486,7 @@ const styles = StyleSheet.create({
       backgroundColor: "#eee",
       alignItems: "center",
       marginVertical: 20,
+      borderRadius: 10
    },
 
    card: {

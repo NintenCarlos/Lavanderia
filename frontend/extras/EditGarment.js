@@ -1,11 +1,6 @@
-import {
-   Modal,
-   View,
-   Text,
-   TextInput,
-   StyleSheet,
-   Pressable,
-} from "react-native";
+import { Modal, View, StyleSheet, Pressable } from "react-native";
+
+import { Card, Text, TextInput } from "react-native-paper";
 
 export default function EditGarmentModal({
    visible,
@@ -17,21 +12,19 @@ export default function EditGarmentModal({
    return (
       <Modal visible={visible} transparent onRequestClose={onClose}>
          <View style={styles.container}>
-            <View style={styles.card}>
+            <Card style={styles.card}>
                <Text style={styles.title}>Editar Prenda</Text>
 
                <Text style={styles.label}>Tipo de prenda</Text>
                <TextInput
-                  style={styles.form}
-                  placeholder="Tipo de prenda"
+                  style={styles.textInput}
                   value={garment.type}
                   onChangeText={(text) => onChange({ ...garment, type: text })}
                />
 
                <Text style={styles.label}>Descripción breve de la prenda</Text>
                <TextInput
-                  style={styles.form}
-                  placeholder="Descripción"
+                  style={styles.textInput}
                   value={garment.description}
                   onChangeText={(text) =>
                      onChange({ ...garment, description: text })
@@ -40,8 +33,7 @@ export default function EditGarmentModal({
 
                <Text style={styles.label}>Observaciones</Text>
                <TextInput
-                  style={styles.form}
-                  placeholder="Observaciones"
+                  style={styles.textInput}
                   value={garment.observation}
                   onChangeText={(text) =>
                      onChange({ ...garment, observation: text })
@@ -56,7 +48,7 @@ export default function EditGarmentModal({
                      <Text style={styles.buttonText}>Cancelar</Text>
                   </Pressable>
                </View>
-            </View>
+            </Card>
          </View>
       </Modal>
    );
@@ -65,58 +57,57 @@ export default function EditGarmentModal({
 const styles = StyleSheet.create({
    container: {
       flex: 1,
-      backgroundColor: '#DC6629',
-      justifyContent: "center",
+      backgroundColor: "#45B7BD",
       alignItems: "center",
+      justifyContent: "center",
    },
    card: {
-      width: "80%",
+      width: "90%",
       backgroundColor: "#fff",
       borderRadius: 15,
       padding: 20,
    },
    title: {
-      fontSize: 22,
-      fontWeight: "bold",
+      fontSize: 32,
+      fontWeight: 700,
       marginBottom: 15,
-      textAlign: "center",
       color: "#376CE4",
+      paddingLeft: 10,
    },
 
    label: {
-      fontSize: 15,
-      marginBottom: 10,
-      marginLeft: 10,
+      fontSize: 18,
+      marginTop: 15,
       color: "#5A3B32",
+      paddingLeft: 10,
    },
 
-   form: {
-      borderWidth: 1,
-      borderColor: "#ccc",
-      borderRadius: 10,
-      padding: 10,
-      marginBottom: 10,
+   textInput: {
+      height: 30,
+      backgroundColor: "#eeeeee",
+      marginTop: 5,
    },
 
    buttonContainer: {
+      marginTop: 20,
       flexDirection: "row",
       justifyContent: "space-around",
    },
 
    save: {
       backgroundColor: "green",
-      padding: 10,
-      borderRadius: 10,
+      borderRadius: 5,
+      padding: 7,
    },
 
    cancel: {
       backgroundColor: "red",
-      padding: 10,
-      borderRadius: 10,
+      borderRadius: 5,
+      padding: 7,
    },
 
    buttonText: {
-      color: "#fff",
-      fontWeight: "600",
+      color: "white",
+      fontWeight: 500,
    },
 });

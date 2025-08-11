@@ -272,21 +272,22 @@ const styles = StyleSheet.create({
    edit: {
       backgroundColor: "#376CE4",
       flexDirection: "row",
-      borderRadius: 15,
-      padding: 10,
+      borderRadius: 5,
+      padding: 7,
       gap: 10,
    },
 
    editDeleteText: {
       color: "white",
       fontWeight: 500,
+      alignSelf: "center",
    },
 
    delete: {
       backgroundColor: "red",
       flexDirection: "row",
-      borderRadius: 15,
-      padding: 10,
+      borderRadius: 5,
+      padding: 7,
       gap: 10,
    },
 
@@ -298,9 +299,8 @@ const styles = StyleSheet.create({
 
    add: {
       backgroundColor: "green",
-      flexDirection: "row",
-      borderRadius: 15,
-      padding: 12,
-      gap: 10,
+      alignSelf: "center",
+      borderRadius: 5,
+      padding: 7,
    },
 });

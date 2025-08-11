@@ -2,15 +2,15 @@ import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
    SafeAreaView,
-   TextInput,
    Pressable,
    StyleSheet,
    Alert,
    Platform,
+   View,
 } from "react-native";
 import axios from "axios";
-import { Card, Text } from "react-native-paper";
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { Card, Text, TextInput } from "react-native-paper";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 
 export default function CreateService() {
    const navigation = useNavigation();
@@ -21,11 +21,14 @@ export default function CreateService() {
       price: 0,
    });
 
-   const settingData = (field, value) => {
-      setData((prev) => ({
-         ...prev,
-         [field]: value,
-      }));
+   const onChangeData = (key, value) => {
+      const service = { ...data };
+
+      if (service) {
+         service[key] = value;
+      }
+
+      setData(service);
    };
 
    async function createNewService() {
@@ -60,65 +63,55 @@ export default function CreateService() {
 
    return (
       <SafeAreaView style={styles.container}>
-         <Card
-            style={
-               Platform.OS == "web"
-                  ? styles.containerWeb
-                  : styles.containerMobile
-            }
-         >
-            {/* Contenido del label */}
-
-      
-               <Pressable onPress={(()=>{navigation.navigate('ListServices')})} >
-                  <FontAwesome5 name="arrow-left" size={20} color="#5A3B32" />
+         <Card style={styles.card}>
+            <View style={styles.titleContainer}>
+               <Pressable
+                  onPress={() => {
+                     navigation.navigate("ListServices");
+                  }}
+               >
+                  <FontAwesome5
+                     name="arrow-left"
+                     size={Platform.OS == "web" ? 24 : 16}
+                     color="#376CE4"
+                  />
                </Pressable>
 
-            <Text  style={
-                  Platform.OS == "web" ? styles.titleWeb : styles.titleMobile
-               }>Crear Servicio</Text>
+               <Text style={styles.title}>Crear Servicio</Text>
+            </View>
 
-            <Text
-               style={
-                  Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
-               }
-            >
-               Nombre del Servicio
-            </Text>
+            <Text style={styles.label}>Nombre del Servicio</Text>
             <TextInput
-               style={styles.form}
+               activeUnderlineColor="#5A3B32"
+               placeholderTextColor="#5A3B32"
+               underlineColor="#5A3B32"
+               style={styles.textInput}
                value={data.name}
-               onChangeText={(text) => settingData("name", text)}
+               onChangeText={(text) => onChangeData("name", text)}
             />
 
-            <Text
-               style={
-                  Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
-               }
-            >
-               Descripción breve del servicio
-            </Text>
+            <Text style={styles.label}>Descripción breve del servicio</Text>
             <TextInput
-               style={styles.form}
+               activeUnderlineColor="#5A3B32"
+               placeholderTextColor="#5A3B32"
+               underlineColor="#5A3B32"
+               style={styles.textInput}
                value={data.description}
-               onChangeText={(text) => settingData("description", text)}
+               onChangeText={(text) => onChangeData("description", text)}
             />
 
-            <Text
-               style={
-                  Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
-               }
-            >
-               Precio del Servicio
-            </Text>
+            <Text style={styles.label}>Precio del Servicio</Text>
             <TextInput
-               style={styles.form}
+               activeUnderlineColor="#5A3B32"
+               placeholderTextColor="#5A3B32"
+               underlineColor="#5A3B32"
+               style={styles.textInput}
                value={data.price}
-               onChangeText={(text) => settingData("price", text)}
+               onChangeText={(text) => onChangeData("price", text)}
             />
 
             <Pressable style={styles.button} onPress={createNewService}>
-               <Text style={styles.buttonText}>Crear Prenda</Text>
+               <Text style={styles.buttonText}>Crear Servicio</Text>
             </Pressable>
          </Card>
       </SafeAreaView>
@@ -128,70 +121,50 @@ export default function CreateService() {
 const styles = StyleSheet.create({
    container: {
       flex: 1,
-      backgroundColor: "#eee",
+      backgroundColor: "#eeeeee",
       alignItems: "center",
       justifyContent: "center",
+      marginVertical: 20,
    },
 
-   containerWeb: {
+   card: {
+      width: "95%",
       backgroundColor: "#fff",
-      padding: 100,
-      paddingHorizontal: 100,
+      padding: 20,
+      paddingHorizontal: 20,
       borderRadius: 15,
    },
 
-   containerMobile: {
-      backgroundColor: "#fff",
-      padding: 70,
-      borderRadius: 15,
-   },
-
-
-   titleWeb: {
+   title: {
       color: "#376CE4",
-      fontSize: 40,
+      fontSize: 32,
       fontWeight: 700,
-      textAlign: "center",
       marginBottom: 20,
    },
 
-   titleMobile: {
-      color: "#376CE4",
-      fontSize: 30,
-      fontWeight: 700,
-      textAlign: "center",
-      marginVertical: 10,
+   titleContainer: {
+      flexDirection: "row",
+      gap: "2%",
    },
 
-   labelWeb: {
-      textAlign: "center",
+   label: {
       fontSize: 18,
-      marginBottom: 10,
-      width: 400,
+      marginTop: 10,
       color: "#5A3B32",
+      paddingLeft: 10,
    },
 
-   labelMobile: {
-      textAlign: "center",
-      fontSize: 18,
-      marginBottom: 10,
-      color: "#5A3B32",
-   },
-
-   form: {
-      borderColor: "#376CE4",
-      borderWidth: 1,
-      borderRadius: 15,
-      paddingHorizontal: 10,
-      marginBottom: 20,
-      height: 40,
-      fontSize: 15,
+   textInput: {
+      height: 30,
+      backgroundColor: "#eeeeee",
+      marginBottom: 5,
    },
 
    button: {
+      marginTop: 25,
       backgroundColor: "#376CE4",
-      paddingVertical: 10,
-      borderRadius: 20,
+      padding: 7,
+      borderRadius: 5,
    },
 
    buttonText: {

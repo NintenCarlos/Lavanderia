@@ -7,9 +7,13 @@ import {
    View,
 } from "react-native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { DrawerActions, useNavigation } from "@react-navigation/native";
+import {
+   DrawerActions,
+   useFocusEffect,
+   useNavigation,
+} from "@react-navigation/native";
 import { Card, Text } from "react-native-paper";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import axios from "axios";
 import GetOrderComponent from "../components/get_order";
 import GetPendingOrderComponent from "../components/get_pending_order";
@@ -23,7 +27,7 @@ export default function Dashboard() {
       users: 0,
       clients: 0,
       orders: 0,
-      pending_orders: 0
+      pending_orders: 0,
    });
 
    const [orders, setOrders] = useState([]);
@@ -34,14 +38,13 @@ export default function Dashboard() {
    const [ordersPagination, setOrdersPagination] = useState(1);
    const [pendingOrdersPagination, setpendingOrdersPagination] = useState(1);
 
-   useEffect(() => {
-      getCounting();
-   }, []);
-
-   useEffect(() => {
-      getOrders();
-      getPendingOrders();
-   }, [ordersPagination, pendingOrdersPagination]);
+   useFocusEffect(
+      useCallback(() => {
+         getCounting();
+         getOrders();
+         getPendingOrders();
+      }, [ordersPagination, pendingOrdersPagination])
+   );
 
    const getCounting = async () => {
       const { data } = await axios.get(
@@ -50,7 +53,7 @@ export default function Dashboard() {
 
       setCounting(data);
       setnumOrders(data.orders);
-      setNumPendingOrders(data.pending_orders)
+      setNumPendingOrders(data.pending_orders);
    };
 
    const getOrders = async () => {
@@ -123,7 +126,9 @@ export default function Dashboard() {
                <View style={styles.titleContainer}>
                   <Text
                      style={
-                        Platform.OS == "web" ? styles.titleWeb : styles.titleMobile
+                        Platform.OS == "web"
+                           ? styles.titleWeb
+                           : styles.titleMobile
                      }
                   >
                      Dashboard
@@ -183,7 +188,6 @@ export default function Dashboard() {
             </Card>
          </View>
       </ScrollView>
-
    );
 }
 
@@ -202,7 +206,6 @@ const styles = StyleSheet.create({
       paddingHorizontal: 20,
       borderRadius: 10,
    },
-
 
    titleContainer: {
       flexDirection: "row",

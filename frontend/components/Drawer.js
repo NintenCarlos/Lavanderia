@@ -4,7 +4,6 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import {
    ClientsNavigation,
    GarmentsNavigation,
-   LoginNavigation,
    OrderNavigation,
    ServicesNavigation,
    UsersNavigation,
@@ -22,8 +21,6 @@ export function DrawerNavigation() {
             drawerInactiveTintColor: "#5A3B32",
          }}
       >
-        
-         
          <Drawer.Screen
             name="Dashboard"
             component={Dashboard}
@@ -35,7 +32,7 @@ export function DrawerNavigation() {
             }}
          />
 
-          <Drawer.Screen
+         <Drawer.Screen
             name="Orders"
             component={OrderNavigation}
             options={{
@@ -51,23 +48,23 @@ export function DrawerNavigation() {
          />
 
          <Drawer.Screen
-            name="Clients"
-            component={ClientsNavigation}
-            options={{
-               drawerLabel: "Clientes",
-               drawerIcon: ({ color, size }) => (
-                  <FontAwesome5 name="address-book" size={size} color={color} />
-               ),
-            }}
-         />
-
-         <Drawer.Screen
             name="Users"
             component={UsersNavigation}
             options={{
                drawerLabel: "Usuarios",
                drawerIcon: ({ color, size }) => (
                   <FontAwesome5 name="user-alt" size={size} color={color} />
+               ),
+            }}
+         />
+
+         <Drawer.Screen
+            name="Clients"
+            component={ClientsNavigation}
+            options={{
+               drawerLabel: "Clientes",
+               drawerIcon: ({ color, size }) => (
+                  <FontAwesome5 name="address-book" size={size} color={color} />
                ),
             }}
          />

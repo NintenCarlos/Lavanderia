@@ -5,12 +5,13 @@ import {
    Pressable,
    SafeAreaView,
    StyleSheet,
-   TextInput,
    Alert,
    Platform,
+   View,
 } from "react-native";
 import axios from "axios";
-import { Card, Text } from "react-native-paper";
+import { Card, Text, TextInput } from "react-native-paper";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 
 export default function CreateUser() {
    const navigation = useNavigation();
@@ -53,61 +54,57 @@ export default function CreateUser() {
 
    return (
       <SafeAreaView style={styles.container}>
-         <Card
-            style={
-               Platform.OS == "web"
-                  ? styles.ContainerWeb
-                  : styles.containerMobile
-            }
-         >
-            <Text style={styles.title}>Crear Usuario</Text>
+         <Card style={styles.card}>
+            <View style={styles.titleContainer}>
+               <Pressable
+                  onPress={() => {
+                     navigation.navigate("ListUsers");
+                  }}
+               >
+                  <FontAwesome5
+                     name="arrow-left"
+                     size={Platform.OS == "web" ? 24 : 16}
+                     color="#376CE4"
+                  />
+               </Pressable>
+               <Text style={styles.title}>Crear Usuario</Text>
+            </View>
 
-            <Text
-               style={
-                  Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
-               }
-            >
-               Nombre
-            </Text>
+            <Text style={styles.label}>Nombre</Text>
             <TextInput
-               style={styles.form}
+               activeUnderlineColor="#5A3B32"
+               placeholderTextColor="#5A3B32"
+               underlineColor="#5A3B32"
+               style={styles.textInput}
                onChangeText={(text) => onChangeData("name", text)}
             />
 
-            <Text
-               style={
-                  Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
-               }
-            >
-               Correo Electrónico
-            </Text>
+            <Text style={styles.label}>Correo Electrónico</Text>
             <TextInput
-               style={styles.form}
+               activeUnderlineColor="#5A3B32"
+               placeholderTextColor="#5A3B32"
+               underlineColor="#5A3B32"
+               style={styles.textInput}
                onChangeText={(text) => onChangeData("email", text)}
             />
 
-            <Text
-               style={
-                  Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
-               }
-            >
-               Contraseña
-            </Text>
+            <Text style={styles.label}>Contraseña</Text>
             <TextInput
-               style={styles.form}
+               activeUnderlineColor="#5A3B32"
+               placeholderTextColor="#5A3B32"
+               underlineColor="#5A3B32"
+               style={styles.textInput}
                onChangeText={(text) => onChangeData("password", text)}
                secureTextEntry
             />
 
-            <Text
-               style={
-                  Platform.OS == "web" ? styles.labelWeb : styles.labelMobile
-               }
-            >
-               Rol del empleado
-            </Text>
+            <Text style={styles.label}>Rol del empleado</Text>
             <Picker
-               style={Platform.OS == "web" ? styles.form : { marginBottom: 20 }}
+               style={
+                  Platform.OS == "web"
+                     ? styles.pickersWeb
+                     : styles.pickersMobile
+               }
                onValueChange={(value) => {
                   onChangeData("rol", value);
                }}
@@ -130,58 +127,47 @@ const styles = StyleSheet.create({
       backgroundColor: "#eeeeee",
       alignItems: "center",
       justifyContent: "center",
+      marginVertical: 20,
    },
 
-   ContainerWeb: {
+   card: {
+      width: "95%",
       backgroundColor: "#fff",
-      padding: 100,
-      paddingHorizontal: 100,
-      borderRadius: 15,
-   },
-
-   containerMobile: {
-      backgroundColor: "#fff",
-      padding: 50,
+      padding: 20,
+      paddingHorizontal: 20,
       borderRadius: 15,
    },
 
    title: {
       color: "#376CE4",
-      fontSize: 40,
+      fontSize: 32,
       fontWeight: 700,
-      textAlign: "center",
       marginBottom: 20,
    },
 
-   labelWeb: {
-      textAlign: "center",
-      fontSize: 18,
-      marginBottom: 10,
-      width: 400,
-      color: "#5A3B32",
+   titleContainer: {
+      flexDirection: "row",
+      gap: "2%",
    },
 
-   labelMobile: {
-      textAlign: "center",
+   label: {
       fontSize: 18,
-      marginBottom: 10,
+      marginTop: 10,
       color: "#5A3B32",
+      paddingLeft: 10,
    },
 
-   form: {
-      borderColor: "#376CE4",
-      borderWidth: 1,
-      borderRadius: 15,
-      paddingHorizontal: 10,
-      marginBottom: 20,
-      height: 40,
-      fontSize: 15,
+   textInput: {
+      height: 30,
+      backgroundColor: "#eeeeee",
+      marginBottom: 5,
    },
 
    button: {
+      marginTop: 25,
       backgroundColor: "#376CE4",
-      paddingVertical: 10,
-      borderRadius: 20,
+      padding: 7,
+      borderRadius: 5,
    },
 
    buttonText: {
@@ -191,11 +177,23 @@ const styles = StyleSheet.create({
       fontWeight: 500,
    },
 
-   registerLink: {
-      color: "#5A3B32",
-      marginTop: 10,
-      fontWeight: 400,
+   pickersWeb: {
+      borderColor: "#eee",
+      backgroundColor: "#eee",
+      borderWidth: 1,
+      borderRadius: 5,
+      paddingHorizontal: 10,
+      marginBottom: 10,
+      height: 30,
       fontSize: 15,
-      textAlign: "center",
+   },
+
+   pickersMobile: {
+      backgroundColor: "#eee",
+      borderWidth: 1,
+      paddingHorizontal: 10,
+      marginBottom: 10,
+      height: 50,
+      fontSize: 15,
    },
 });

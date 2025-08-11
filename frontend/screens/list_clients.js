@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
       backgroundColor: "#fff",
       padding: 20,
       paddingHorizontal: 20,
-      borderRadius: 15,
+      borderRadius: 10,
    },
 
    titleContainer: {
@@ -291,8 +291,9 @@ const styles = StyleSheet.create({
    filterButtons: {
       backgroundColor: "#5A3B32",
       flexDirection: "row",
-      borderRadius: 15,
-      padding: 10,
+      alignSelf: "center",
+      borderRadius: 5,
+      padding: 7,
    },
 
    textInput: {
@@ -303,6 +304,7 @@ const styles = StyleSheet.create({
 
    clientCard: {
       backgroundColor: "#DC6629",
+      borderRadius: 10,
       padding: 10,
       marginBottom: 10,
    },
@@ -328,8 +330,8 @@ const styles = StyleSheet.create({
    edit: {
       backgroundColor: "#376CE4",
       flexDirection: "row",
-      borderRadius: 15,
-      padding: 10,
+      borderRadius: 5,
+      padding: 7,
       gap: 10,
    },
 
@@ -342,8 +344,8 @@ const styles = StyleSheet.create({
    delete: {
       backgroundColor: "red",
       flexDirection: "row",
-      borderRadius: 15,
-      padding: 10,
+      borderRadius: 5,
+      padding: 7,
       gap: 10,
    },
 
@@ -356,9 +358,8 @@ const styles = StyleSheet.create({
 
    add: {
       backgroundColor: "green",
-      flexDirection: "row",
-      borderRadius: 15,
-      padding: 12,
-      gap: 10,
+      alignSelf: "center",
+      borderRadius: 5,
+      padding: 7,
    },
 });
